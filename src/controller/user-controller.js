@@ -1,4 +1,5 @@
 //import TeacherRepository from "../repository/user-repository.js";
+
 import UserRepository from "../repository/user-repository.js";
 
 const userRepo = new UserRepository();
@@ -8,10 +9,11 @@ export const userSignup = async (req, res)=> {
         const response =await userRepo.create({
             email: req.body.email,
             name: req.body.name,
-            enrollmentNumber: req.body.enrollment,
-            rollNumber: req.body.rollno,          
+            enrollmentNumber: req.body.enrollmentNumber,
+            rollNumber: req.body.rollNumber,          
             password: req.body.password,
-            status: req.body.status
+            status: 'active',
+            type: 'student' //all accounts are student if through signup page
         });
         return res.status(200).json({
             success: true,
@@ -48,7 +50,6 @@ export const userLogin = async (req, res)=>{
         }
 
         const token = user.genJWT();
-        console.log(token);
 
         return res.status(200).json({
             success: true,
@@ -61,6 +62,21 @@ export const userLogin = async (req, res)=>{
         console.log(error);
         return res.status(500).json({
             message: 'Something went wrong in auth layer',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+}
+
+export const setInfo = async(req, res) =>{
+    try{
+        //update user data
+    }
+    catch (error){
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in editing user information',
             data: {},
             success: false,
             err: error

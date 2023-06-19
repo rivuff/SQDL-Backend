@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },
     rollNumber:{
         type: String,
-        required: true,
+        required: false, //CHANGED --> used to be true
     },
     password: {
         type: String, 
@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['active', 'blocked', 'invited'],
         default: 'active'
+    },
+    type: { //ADDED
+        type: String,
+        enum: ['student', 'teacher', 'admin']
     }
 }, {timestamps: true})
 
