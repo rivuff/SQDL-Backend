@@ -1,15 +1,16 @@
 //import TeacherRepository from "../repository/user-repository.js";
-
+import { set } from "mongoose";
 import UserRepository from "../repository/user-repository.js";
 
 const userRepo = new UserRepository();
+
 
 export const userSignup = async (req, res)=> {
     try {
         const response =await userRepo.create({
             email: req.body.email,
             name: req.body.name,
-            enrollmentNumber: req.body.enrollmentNumber,
+            enrollmentNumber: req.body.enrollment,
             rollNumber: req.body.rollNumber,          
             password: req.body.password,
             status: 'active',
@@ -50,7 +51,7 @@ export const userLogin = async (req, res)=>{
         }
 
         const token = user.genJWT();
-
+    
         return res.status(200).json({
             success: true,
             message: "Successfully logged in",
@@ -69,9 +70,46 @@ export const userLogin = async (req, res)=>{
     }
 }
 
-export const setInfo = async(req, res) =>{
+export const updateInfo = async(req, res) =>{
     try{
         //update user data
+
+        const user = await userRepo.findBy(req.query.email);
+        console.log(user);
+        if(!user){
+            return res.status(401).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+        console.log(req.body);
+
+        if(req.body.name!=null){
+            user.name = req.body.name;
+            console.log(user.name);
+        }
+        if(req.body.email!=null){
+            user.email = req.body.emal;
+            console.log(user.email);
+        }
+        if(req.body.enrollment!=null){
+            user.enrollmentNumber = req.body.enrollment;
+            console.log(user.enrollmentNumber);
+        }
+        if(req.body.rollno!=null){
+            user.rollNumber = req.body.rollno;
+            console.log(user.rollNumber);
+        }
+
+        const updateUser = await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Successfully updated",
+            data: updateUser,
+            err: {}
+        })
+
     }
     catch (error){
         console.log(error);
