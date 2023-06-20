@@ -107,7 +107,7 @@ export const updateInfo = async(req, res) =>{
             // console.log(user.type);
         }
 
-        const updateUser = await user.update();
+        await user.save();
         console.log('updated')
         return res.status(200).json({
             success: true,
