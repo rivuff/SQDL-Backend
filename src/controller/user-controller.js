@@ -4,7 +4,6 @@ import UserRepository from "../repository/user-repository.js";
 
 const userRepo = new UserRepository();
 
-
 export const userSignup = async (req, res)=> {
     try {
         const response =await userRepo.create({
