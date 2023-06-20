@@ -1,16 +1,25 @@
 import express from "express";
-import { userLogin,userSignup,updateInfo,getAlluser, get } from "../../controller/user-controller.js";
+import { userLogin,userSignup,updateInfo,getAlluser, get, getByID } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
 const router = express.Router();
 
-router.post('/user/signup', userSignup); //student sign up
+//LOGIN Route
 router.post('/user/login', userLogin);  //user login
-router.get('/user/getall', getAlluser); // for getting all the users
+
+//Data Update ROUTES
 router.post('/user/update', updateInfo) // update information
+
+
+//Data Query ROUTES
+router.get('/user/get', get); // get a user
+router.get('/user/getall', getAlluser); // for getting all the users
+router.post('/user/getID', getByID);
+
+//Registration ROUTES
+router.post('/user/signup', userSignup); //student sign up
 router.post('/admin/invite', inviteTeacher); //send invite to a teacher
 router.post('/teacher/accept/:token', acceptInvite); //send invite to a teacher
-router.get('/user/get', get); // get a user
 
 export default router
