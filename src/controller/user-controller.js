@@ -76,36 +76,40 @@ export const userLogin = async (req, res)=>{
 export const updateInfo = async(req, res) =>{
     try{
         //update user data
-
-        const user = await userRepo.findBy(req.query.email);
-        console.log(user);
+        const user = await userRepo.findByID(req.body._id);
         if(!user){
             return res.status(401).json({
                 success: false,
                 message: "User not found"
             })
         }
-        console.log(req.body);
 
         if(req.body.name!=null){
             user.name = req.body.name;
-            console.log(user.name);
+            // console.log(user.name);
         }
         if(req.body.email!=null){
-            user.email = req.body.emal;
-            console.log(user.email);
+            user.email = req.body.email;
+            // console.log(user.email);
         }
-        if(req.body.enrollment!=null){
-            user.enrollmentNumber = req.body.enrollment;
-            console.log(user.enrollmentNumber);
+        if(req.body.enrollmentNumber!=null){
+            user.enrollmentNumber = req.body.enrollmentNumber;
+            // console.log(user.enrollmentNumber);
         }
-        if(req.body.rollno!=null){
-            user.rollNumber = req.body.rollno;
-            console.log(user.rollNumber);
+        if(req.body.rollNumber!=null){
+            user.rollNumber = req.body.rollNumber;
+            // console.log(user.rollNumber);
+        }
+        if(req.body.status!=null){
+            user.status = req.body.status;
+            // console.log(user.status);
+        } if(req.body.type!=null){
+            user.type = req.body.type;
+            // console.log(user.type);
         }
 
-        const updateUser = await user.save();
-
+        const updateUser = await user.update();
+        console.log('updated')
         return res.status(200).json({
             success: true,
             message: "Successfully updated",
@@ -148,6 +152,29 @@ export const get = async(req, res)=>{
         })
     }
 }
+export const getByID = async(req, res)=>{
+    try {
+        const {_id} = req.body;
+        console.log(_id)
+        const user = await userRepo.findByID(_id);
+
+        return res.status(200).json({
+            success: true,
+            message: "User retrived successfully",
+            data: user,
+            err:{}
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in querying user information',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+}
 
 export const getAlluser = async (req, res)=>{
 
@@ -155,9 +182,7 @@ export const getAlluser = async (req, res)=>{
         console.log(req.query);
         const {offset, limit} = req.query;
         console.log(offset, limit);
-        
         const users =await userRepo.getAll(parseInt(offset), parseInt(limit));
-        console.log(users);
         return res.status(200).json({
             success: true,
             message: 'Users retrieved successfully',

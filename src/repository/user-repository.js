@@ -22,6 +22,15 @@ class UserRepository{
             throw error
         }
     }
+   async findByID(_id){
+        try {
+            const response = await User.findOne({_id:_id});
+            return response;
+        } catch (error) {
+            console.log("Something went wrong in repository layer");
+            throw error
+        }
+    }
 
     async getAll(offset, limit){
         try {
@@ -32,6 +41,9 @@ class UserRepository{
             throw error
         }
     }
+    async update(data){
+    //update user data here
+    }      
     
 }
 
