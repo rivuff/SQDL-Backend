@@ -70,6 +70,9 @@ export const userLogin = async (req, res)=>{
     }
 }
 
+
+
+
 export const updateInfo = async(req, res) =>{
     try{
         //update user data
@@ -120,4 +123,56 @@ export const updateInfo = async(req, res) =>{
             err: error
         })
     }
+}
+
+export const get = async(req, res)=>{
+    try {
+        const {email} = req.query;
+
+        const user = await userRepo.findBy(email);
+
+        return res.status(200).json({
+            success: true,
+            message: "User retrived successfully",
+            data: user,
+            err:{}
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in editing user information',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+}
+
+export const getAlluser = async (req, res)=>{
+
+    try {
+        console.log(req.query);
+        const {offset, limit} = req.query;
+        console.log(offset, limit);
+        
+        const users =await userRepo.getAll(parseInt(offset), parseInt(limit));
+        console.log(users);
+        return res.status(200).json({
+            success: true,
+            message: 'Users retrieved successfully',
+            data: users,
+            err: {}
+          });
+    
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in editing user information',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+   
 }

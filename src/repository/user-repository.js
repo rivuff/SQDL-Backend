@@ -22,6 +22,16 @@ class UserRepository{
             throw error
         }
     }
+
+    async getAll(offset, limit){
+        try {
+            const user = User.find().skip(offset).limit(limit);
+            return user;
+        } catch (error) {
+            console.log("Something went wrong in repository layer");
+            throw error
+        }
+    }
     
 }
 
