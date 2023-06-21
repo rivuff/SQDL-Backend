@@ -45,6 +45,11 @@ const inviteTeacher = async (req, res) => {
         })
             .catch((error)=>{
                     console.log(error);
+                    const user = userRepo.findBy(req.body.email);
+                    if (user != null) {
+                        //delete user
+
+                    }
                     return res.status(500).json({
                         message: 'Something went wrong in inviting new user',
                         data: {},
