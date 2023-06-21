@@ -4,9 +4,8 @@ class UserRepository{
 
     async create(data){
         try {
-            console.log(data);
             const response = User.create(data);
-            console.log(response);
+            return response
         } catch (error) {
             console.log("user repo ",error);
             throw error;

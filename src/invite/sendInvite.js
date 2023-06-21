@@ -8,6 +8,7 @@ const userRepo = new UserRepository();
 
 const inviteTeacher = async (req, res) => {
     //checking if user with email exists
+    console.log(req.body.email)
     const user = await userRepo.findBy(req.body.email);
     if (user!=null){
         console.log('User exists')
@@ -19,7 +20,7 @@ const inviteTeacher = async (req, res) => {
         })
     }
     //creating teacher account
-    const newUser = userRepo.create({
+    userRepo.create({
         email: req.body.email,
         name: req.body.name,
         enrollmentNumber: null,
@@ -27,32 +28,33 @@ const inviteTeacher = async (req, res) => {
         password: "",
         status: "invited",
         type: "teacher"
-    })
-    //generating JWT
-    const token = jwt.sign({
-        id: newUser._id,
-        email: newUser.email
-    },'emailVerification')
-    //sending Email 
-    try{
-        sendMail(newUser.name, newUser.email, token)
+    }).then((response)=>{
+        console.log(response)
+        const token = jwt.sign({
+            id: response._id,
+            email: response.email
+        }, 'emailVerification')
+        //sending Email 
+        sendMail(response.name, response.email, token)
         return res.status(200).json({
             success: true,
             message: "User invited successfully",
-            data: newUser,
+            data: response,
             err: {}
         });
-    }
-    catch(error){
-        console.log(error);
-        return res.status(500).json({
-            message: 'Something went wrong in inviting new user',
-            data: {},
-            success: false,
-            err: error
         })
+            .catch((error)=>{
+                    console.log(error);
+                    return res.status(500).json({
+                        message: 'Something went wrong in inviting new user',
+                        data: {},
+                        success: false,
+                        err: error
+                    })
+            })
 
-    }
+    //generating JWT
+    
 }
 
 export default inviteTeacher
