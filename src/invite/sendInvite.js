@@ -25,16 +25,34 @@ const inviteTeacher = async (req, res) => {
         enrollmentNumber: null,
         rollNumber: null,
         password: "",
-        status: "invited",//save JWT token data here and send email with jwt 
+        status: "invited",
         type: "teacher"
     })
-    newUser.then((response)=>{
-        response.then((res)=>{
-            console.log(newUser)
+    //generating JWT
+    const token = jwt.sign({
+        id: newUser._id,
+        email: newUser.email
+    },'emailVerification')
+    //sending Email 
+    try{
+        sendMail(newUser.name, newUser.email, token)
+        return res.status(200).json({
+            success: true,
+            message: "User invited successfully",
+            data: newUser,
+            err: {}
+        });
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in inviting new user',
+            data: {},
+            success: false,
+            err: error
         })
-    }).catch((error)=>{
 
-    })
+    }
 }
 
 export default inviteTeacher
