@@ -5,6 +5,8 @@ import acceptInvite from "../../invite/acceptInvite.js"
 
 const router = express.Router();
 
+//SIGNUP Route
+router.post('/user/signup', userSignup);
 //LOGIN Route
 router.post('/user/login', userLogin);  //user login
 
