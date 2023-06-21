@@ -154,7 +154,6 @@ export const get = async(req, res)=>{
 export const getByID = async(req, res)=>{
     try {
         const {_id} = req.body;
-        console.log(_id)
         const user = await userRepo.findByID(_id);
 
         return res.status(200).json({
