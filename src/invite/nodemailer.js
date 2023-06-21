@@ -10,7 +10,8 @@ const transporter = nodemailer.createTransport({//creating transporter object us
 
 
 
-async function sendMail(email, name, token){ //async function to send mail containing token/token link 
+async function sendMail(name, email, token){ //async function to send mail containing token/token link 
+  console.log(email)
     let mail = {
         from: 'sqdl.iitb@outlook.com',
         to: email,

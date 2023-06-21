@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     enrollmentNumber: {
         type: String,
-        unique: true
+        unique: false
     },
     rollNumber:{
         type: String,
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String, 
-        required: true
+        required: false
     },
     status: {
         type: String,

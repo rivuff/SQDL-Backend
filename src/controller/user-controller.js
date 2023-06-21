@@ -73,60 +73,49 @@ export const userLogin = async (req, res)=>{
 
 
 export const updateInfo = async(req, res) =>{
-    try{
-        //update user data
-        const user = await userRepo.findByID(req.body._id);
-
-        if(!user){
-            return res.status(401).json({
-                success: false,
-                message: "User not found"
-            })
-        }
-
-        if(req.body.name!=null){
-            user.name = req.body.name;
-            // console.log(user.name);
-        }
-        if(req.body.email!=null){
-            user.email = req.body.email;
-            // console.log(user.email);
-        }
-        if(req.body.enrollmentNumber!=null){
-            user.enrollmentNumber = req.body.enrollmentNumber;
-            // console.log(user.enrollmentNumber);
-        }
-        if(req.body.rollNumber!=null){
-            user.rollNumber = req.body.rollNumber;
-            // console.log(user.rollNumber);
-        }
-        if(req.body.status!=null){
-            user.status = req.body.status;
-            // console.log(user.status);
-        } if(req.body.type!=null){
-            user.type = req.body.type;
-            // console.log(user.type);
-        }
-
-        const updateUser = await user.save();
-        console.log('updated')
-        return res.status(200).json({
-            success: true,
-            message: "Successfully updated",
-            data: updateUser,
-            err: {}
-        })
-
-    }
-    catch (error){
-        console.log(error);
-        return res.status(500).json({
-            message: 'Something went wrong in editing user information',
-            data: {},
+    //update user data
+    const user = await userRepo.findByID(req.body._id);
+    if(!user){
+        return res.status(401).json({
             success: false,
-            err: error
+            message: "User not found"
         })
     }
+
+    if(req.body.name!=null){
+        user.name = req.body.name;
+        // console.log(user.name);
+    }
+    if(req.body.email!=null){
+        user.email = req.body.email;
+        // console.log(user.email);
+    }
+    if(req.body.enrollmentNumber!=null){
+        user.enrollmentNumber = req.body.enrollmentNumber;
+        // console.log(user.enrollmentNumber);
+    }
+    if(req.body.rollNumber!=null){
+        user.rollNumber = req.body.rollNumber;
+        // console.log(user.rollNumber);
+    }
+    if(req.body.status!=null){
+        user.status = req.body.status;
+        // console.log(user.status);
+    } if(req.body.type!=null){
+        user.type = req.body.type;
+        // console.log(user.type);
+    }
+    const updateUser = await user.save();
+    console.log('updated')
+    return res.status(200).json({
+        success: true,
+        message: "Successfully updated",
+        data: updateUser,
+        err: {}
+    })
+
+    
+ 
 }
 
 export const get = async(req, res)=>{
@@ -155,7 +144,6 @@ export const get = async(req, res)=>{
 export const getByID = async(req, res)=>{
     try {
         const {_id} = req.body;
-        console.log(_id)
         const user = await userRepo.findByID(_id);
 
         return res.status(200).json({
