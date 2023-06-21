@@ -54,7 +54,7 @@ export const userLogin = async (req, res)=>{
         return res.status(200).json({
             success: true,
             message: "Successfully logged in",
-            data: token,
+            data: user,
             err: {}
         })
 
@@ -76,6 +76,7 @@ export const updateInfo = async(req, res) =>{
     try{
         //update user data
         const user = await userRepo.findByID(req.body._id);
+
         if(!user){
             return res.status(401).json({
                 success: false,
