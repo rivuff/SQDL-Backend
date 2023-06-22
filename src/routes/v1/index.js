@@ -22,6 +22,6 @@ router.post('/user/getID', getByID);
 //Registration ROUTES
 router.post('/user/signup', userSignup); //student sign up
 router.post('/admin/invite', inviteTeacher); //send invite to a teacher
-router.post('/teacher/accept/:token', acceptInvite); //send invite to a teacher
+router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 
 export default router

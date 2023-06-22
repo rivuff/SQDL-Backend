@@ -16,7 +16,7 @@ async function sendMail(name, email, token){ //async function to send mail conta
         from: 'sqdl.iitb@outlook.com',
         to: email,
         subject: 'Teacher account invitiation for ' + name,
-        text: token,
+        text: 'http://localhost:3000/teacher/accept/'+token,
     }
     transporter.sendMail(mail, function (err, info){
         if (err){
