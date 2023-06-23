@@ -1,3 +1,5 @@
+import UserRepository from "../repository/user-repository.js";
+const userRepo = new UserRepository();
 
 const acceptInvite = async (req, res)=>{
     let email = req.body.email
@@ -16,15 +18,19 @@ const acceptInvite = async (req, res)=>{
         }
         else {
             user.status = 'active'
+            user.password = req.body.password
+            const updateUser = await user.save();
+            console.log('Account Activated')
             return res.status(200).json({
                 succsess: true,
-                message: 'User verified successfully',
-                data: user,
+                message: 'Account activated successfully',
+                data: updateUser,
                 err: {}
             })
         }
     }
     catch (error){
+        console.log(error)
         return res.status(500).json({
             success: false,
             message: 'Something went wrong',
