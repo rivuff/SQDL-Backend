@@ -35,7 +35,13 @@ export const userSignup = async (req, res)=> {
 
 export const userLogin = async (req, res)=>{
     try {
-        const user = await userRepo.findBy(req.body.email);
+        let user = null;
+        if(req.body.email!=null){
+            user = await userRepo.findBy(req.body.email);
+        }else{
+            user = await userRepo.findBystudId(req.body.studentId);
+        }
+        
         if(!user){
             return res.status(401).json({
                 success: false,
@@ -74,48 +80,87 @@ export const userLogin = async (req, res)=>{
 
 export const updateInfo = async(req, res) =>{
     //update user data
-    const user = await userRepo.findByID(req.body._id);
-    if(!user){
-        return res.status(401).json({
+    try {
+        const user = await userRepo.findByID(req.body._id);
+        if(!user){
+            return res.status(401).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        if(req.body.name!=null){
+            user.name = req.body.name;
+            // console.log(user.name);
+        }
+        if(req.body.email!=null){
+            user.email = req.body.email;
+            // console.log(user.email);
+        }
+        if(req.body.enrollmentNumber!=null){
+            user.enrollmentNumber = req.body.enrollmentNumber;
+            // console.log(user.enrollmentNumber);
+        }
+        if(req.body.rollNumber!=null){
+            user.rollNumber = req.body.rollNumber;
+            // console.log(user.rollNumber);
+        }
+        if(req.body.status!=null){
+            user.status = req.body.status;
+            // console.log(user.status);
+        } if(req.body.type!=null){
+            user.type = req.body.type;
+            // console.log(user.type);
+        }
+        const updateUser = await user.save();
+        console.log('updated')
+        return res.status(200).json({
+            success: true,
+            message: "Successfully updated",
+            data: updateUser,
+            err: {}
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in auth layer',
+            data: {},
             success: false,
-            message: "User not found"
+            err: error
         })
     }
-
-    if(req.body.name!=null){
-        user.name = req.body.name;
-        // console.log(user.name);
-    }
-    if(req.body.email!=null){
-        user.email = req.body.email;
-        // console.log(user.email);
-    }
-    if(req.body.enrollmentNumber!=null){
-        user.enrollmentNumber = req.body.enrollmentNumber;
-        // console.log(user.enrollmentNumber);
-    }
-    if(req.body.rollNumber!=null){
-        user.rollNumber = req.body.rollNumber;
-        // console.log(user.rollNumber);
-    }
-    if(req.body.status!=null){
-        user.status = req.body.status;
-        // console.log(user.status);
-    } if(req.body.type!=null){
-        user.type = req.body.type;
-        // console.log(user.type);
-    }
-    const updateUser = await user.save();
-    console.log('updated')
-    return res.status(200).json({
-        success: true,
-        message: "Successfully updated",
-        data: updateUser,
-        err: {}
-    })
-
-    
  
+}
+
+export const deleteUser = async(req, res)=>{
+    try {
+        const email = req.body.email;
+
+        const response = userRepo.delete(email);
+
+
+        if (response) {
+            console.log("User successfully deleted");
+            return res.json({
+              message: "User successfully deleted",
+              success: true,
+            });
+        } else {
+            console.log("User not found");
+            return res.status(404).json({
+              message: "User not found",
+              success: false,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in auth layer',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
 }
 
 export const get = async(req, res)=>{

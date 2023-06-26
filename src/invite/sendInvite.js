@@ -43,7 +43,7 @@ const inviteTeacher = async (req, res) => {
             err: {}
         });
         })
-            .catch((error)=>{
+        .catch((error)=>{
                     console.log(error);
                     const user = userRepo.findBy(req.body.email);
                     if (user != null) {

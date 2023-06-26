@@ -1,5 +1,5 @@
 import express from "express";
-import { userLogin,userSignup,updateInfo,getAlluser, get, getByID } from "../../controller/user-controller.js";
+import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/user/signup', userSignup);
 //LOGIN Route
 router.post('/user/login', userLogin);  //user login
-
+router.delete('/user/delete', deleteUser);//delete user
 //Data Update ROUTES
 router.post('/user/update', updateInfo) // update information
 

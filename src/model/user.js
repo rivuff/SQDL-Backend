@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    }, studentId: {
+        type: String,
+        unique: true
     },
     name:{
         type: String,
@@ -35,6 +38,31 @@ const userSchema = new mongoose.Schema({
         enum: ['student', 'teacher', 'admin']
     }
 }, {timestamps: true})
+
+
+userSchema.pre('save', async function(next) {
+    if (!this.studentId) {
+        // Generate the student ID if it doesn't exist
+        this.studentId = await generateUniqueStudentId();
+    }
+    next();
+});
+
+async function generateUniqueStudentId() {
+    let studentId;
+    do {
+        // Generate a potential student ID
+        studentId = 'STU' + Math.random().toString().substring(2, 7);
+        // Check if the student ID already exists
+        const count = await mongoose.model('User').countDocuments({ studentId });
+        if (count === 0) {
+            // Unique student ID generated
+            return studentId;
+        }
+    } while (true);
+}
+
+
 
 userSchema.pre('save', function(next){
     const student = this;

@@ -1,4 +1,5 @@
 import UserRepository from "../repository/user-repository.js";
+import bcrypt from 'bcrypt';
 const userRepo = new UserRepository();
 
 const acceptInvite = async (req, res)=>{
@@ -17,8 +18,13 @@ const acceptInvite = async (req, res)=>{
             })
         }
         else {
+            
             user.status = 'active'
-            user.password = req.body.password
+            const password = req.body.password;
+            const SALT = bcrypt.genSaltSync(9);
+            const encriptedPassword = bcrypt.hashSync(password, SALT);
+
+            user.password = encriptedPassword;
             const updateUser = await user.save();
             console.log('Account Activated')
             return res.status(200).json({
