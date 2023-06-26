@@ -33,7 +33,7 @@ const inviteTeacher = async (req, res) => {
         const token = jwt.sign({
             id: response._id,
             email: response.email
-        }, 'emailVerification')
+        }, 'emailVerification', {expiresIn: '24h'})
         //sending Email 
         sendMail(response.name, response.email, token)
         return res.status(200).json({
