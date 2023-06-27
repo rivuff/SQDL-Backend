@@ -18,7 +18,14 @@ const acceptInvite = async (req, res)=>{
             })
         }
         else {
-            
+            if (user.status == 'active'||user.password!=''){
+                return res.status(200).json({
+                    succsess: false,
+                    message: 'Account has already been activated',
+                    data: updateUser,
+                    err: {}
+                })
+            }
             user.status = 'active'
             const password = req.body.password;
             const SALT = bcrypt.genSaltSync(9);

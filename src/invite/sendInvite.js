@@ -3,7 +3,6 @@
 import UserRepository from "../repository/user-repository.js";
 import sendMail from './nodemailer.js'
 import jwt from 'jsonwebtoken'
-
 const userRepo = new UserRepository();
 
 const inviteTeacher = async (req, res) => {
@@ -20,6 +19,7 @@ const inviteTeacher = async (req, res) => {
         })
     }
     //creating teacher account
+    console.log(req.body.email, req.body.name)
     userRepo.create({
         email: req.body.email,
         name: req.body.name,
@@ -33,7 +33,7 @@ const inviteTeacher = async (req, res) => {
         const token = jwt.sign({
             id: response._id,
             email: response.email
-        }, 'emailVerification')
+        }, 'emailVerification', {expiresIn: '24h'})
         //sending Email 
         sendMail(response.name, response.email, token)
         return res.status(200).json({
@@ -47,8 +47,7 @@ const inviteTeacher = async (req, res) => {
                     console.log(error);
                     const user = userRepo.findBy(req.body.email);
                     if (user != null) {
-                        //delete user
-
+                        const response = userRepo.delete(req.body.email);
                     }
                     return res.status(500).json({
                         message: 'Something went wrong in inviting new user',
