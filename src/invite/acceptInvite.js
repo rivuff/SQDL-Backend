@@ -18,11 +18,11 @@ const acceptInvite = async (req, res)=>{
             })
         }
         else {
-            if (user.status == 'active'||user.password!=''){
+            if (user.status == 'active'){
                 return res.status(200).json({
-                    succsess: false,
+                    success: false,
                     message: 'Account has already been activated',
-                    data: updateUser,
+                    data: user,
                     err: {}
                 })
             }
@@ -35,7 +35,7 @@ const acceptInvite = async (req, res)=>{
             const updateUser = await user.save();
             console.log('Account Activated')
             return res.status(200).json({
-                succsess: true,
+                success: true,
                 message: 'Account activated successfully',
                 data: updateUser,
                 err: {}

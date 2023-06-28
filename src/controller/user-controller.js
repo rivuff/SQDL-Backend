@@ -26,7 +26,7 @@ export const userSignup = async (req, res)=> {
         console.log(error);
         return res.status(500).json({
             success: false,
-            message: "something went wrong in controller",
+            message: "Account with this email already exists",
             data: {},
             err: error
         })
@@ -36,12 +36,13 @@ export const userSignup = async (req, res)=> {
 export const userLogin = async (req, res)=>{
     try {
         let user = null;
+        console.log(req.body.email, req.body.password)
         if(req.body.email!=null){
             user = await userRepo.findBy(req.body.email);
         }else{
             user = await userRepo.findBystudId(req.body.studentId);
         }
-        
+        console.log(user.comparePassword(req.body.password))
         if(!user){
             return res.status(401).json({
                 success: false,
@@ -54,7 +55,7 @@ export const userLogin = async (req, res)=>{
                 message: "incorrect password"
             })
         }
-
+        console.log(user)
         const token = user.genJWT();
     
         return res.status(200).json({
@@ -133,12 +134,13 @@ export const updateInfo = async(req, res) =>{
 }
 
 export const deleteUser = async(req, res)=>{
+    console.log(req.body.email)
     try {
         const email = req.body.email;
+        console.log(email)
+        const response = await userRepo.delete(email);
 
-        const response = userRepo.delete(email);
-
-
+        
         if (response) {
             console.log("User successfully deleted");
             return res.json({
