@@ -52,7 +52,7 @@ async function generateUniqueStudentId() {
     let studentId;
     do {
         // Generate a potential student ID
-        studentId = 'STU' + Math.random().toString().substring(2, 7);
+        studentId = 'S' + Math.random().toString().substring(2, 9);
         // Check if the student ID already exists
         const count = await mongoose.model('User').countDocuments({ studentId });
         if (count === 0) {
