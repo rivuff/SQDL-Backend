@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/user/signup', userSignup);
 //LOGIN Route
 router.post('/user/login', userLogin);  //user login
-router.delete('/user/delete', deleteUser);//delete user
+router.post('/user/delete', deleteUser);//delete user
 //Data Update ROUTES
 router.post('/user/update', updateInfo) // update information
 
