@@ -2,7 +2,7 @@ import express from "express";
 import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
-import { createSubject, getAllSubject } from "../../controller/subject-controller.js";
+import { createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
 
 const router = express.Router();
 
@@ -29,5 +29,6 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject)
+router.post('/subject/getID', getSubjectByID)
 
 export default router
