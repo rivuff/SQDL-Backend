@@ -56,3 +56,4 @@ export const getAllSubject = async (req, res)=>{
     }
    
 }
+
