@@ -34,7 +34,7 @@ export const createModule = async (req, res) => {
 
 
 
-export const getAllFromSubjectId = async (req, res) => {
+export const getModulesBySubjectId = async (req, res) => {
 
     try {
         const _id = req.body._id
@@ -59,7 +59,7 @@ export const getAllFromSubjectId = async (req, res) => {
 }
 
 
-export const getById = async (req, res) => {
+export const getModuleById = async (req, res) => {
 
     try {
         const _id = req.body._id
