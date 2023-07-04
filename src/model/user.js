@@ -35,16 +35,25 @@ const userSchema = new mongoose.Schema({
     },
     type: { //ADDED
         type: String,
-        enum: ['student', 'teacher', 'admin']
-    }
+        enum: ['student', 'teacher', 'admin'],
+        default: 'student'
+    },
+    subjects: {
+        type: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Subject',
+        }],
+        default: [],
+      },
 }, {timestamps: true})
 
 
 userSchema.pre('save', async function(next) {
-    if (!this.studentId) {
-        // Generate the student ID if it doesn't exist
-        this.studentId = await generateUniqueStudentId();
-    }
+   
+        if (!this.studentId) {
+            // Generate the student ID if it doesn't exist
+            this.studentId = await generateUniqueStudentId();
+        }
     next();
 });
 
@@ -61,7 +70,6 @@ async function generateUniqueStudentId() {
         }
     } while (true);
 }
-
 
 
 userSchema.pre('save', function(next){

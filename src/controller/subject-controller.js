@@ -1,4 +1,6 @@
 import SubjectRepository from "../repository/subject-repository.js"
+import Subject from "../model/subject.js";
+import User from "../model/user.js";
 
 const subjectRepo = new SubjectRepository();
 
@@ -56,3 +58,33 @@ export const getAllSubject = async (req, res)=>{
     }
    
 }
+
+export const addUserSubject = async (req, res)=>{
+
+    const {userId, subjectIds} = req.body;
+
+    try {
+        console.log(userId);
+        const user = await User.findOne({_id: userId});
+
+        console.log(user);
+        if(!user){
+            return res.status(200).json({error: "user not found"});
+        }
+
+
+        const subjects = await Subject.find({_id: {$in: subjectIds}});
+
+        user.subjects.push(...subjects);
+
+        await user.save();
+
+        res.status(200).json({ message: 'Subjects added successfully' });
+        console.log("subject added");
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
+

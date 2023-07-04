@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 const subjectSchema = new mongoose.Schema({
     subjectId:{
@@ -16,7 +16,11 @@ const subjectSchema = new mongoose.Schema({
     createdBy:{
         type: String,
         required: true
-    }               
+    },
+    users:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]            
 }, {timestamps: true})
 
 
