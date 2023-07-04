@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { Jwt_key } from "../config/serverConfig.js";
-import subjectSchema from './subject.js'
 
 const userSchema = new mongoose.Schema({
     email:{
