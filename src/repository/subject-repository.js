@@ -30,6 +30,8 @@ class SubjectRepository{
             throw error
         }
     }
+
+   
 }
 
 export default SubjectRepository;

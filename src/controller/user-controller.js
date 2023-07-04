@@ -13,7 +13,7 @@ export const userSignup = async (req, res)=> {
             rollNumber: req.body.rollNumber,          
             password: req.body.password,
             status: 'active',
-            type: 'student' //all accounts are student if through signup page
+            type:  req.body.type //all accounts are student if through signup page
         });
         return res.status(200).json({
             success: true,

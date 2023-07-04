@@ -2,8 +2,9 @@ import express from "express";
 import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
-import { createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
-import { createModule, getAllFromSubjectId, getById } from "../../controller/module-controller.js";
+
+import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
+import { createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
 const router = express.Router();
 
@@ -38,5 +39,14 @@ router.post('/module/getAllFromSubjectID', getAllFromSubjectId)
 router.post('/module/getID', getById)
 
 
+
+router.post('/subject/add', addUserSubject);
+
+
+//session routes
+
+router.post('/session/create', createSession);
+router.get('/session/get', getSession);
+router.get('/session/getAll', getAllSession)
 
 export default router
