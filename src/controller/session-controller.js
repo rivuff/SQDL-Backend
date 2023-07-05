@@ -1,6 +1,8 @@
 import sessionRepository from "../repository/session-repository.js";
-
+import User from "../model/user.js";
+import Session from "../model/session.js";
 const sessionRepo = new sessionRepository();
+
 export const createSession = async (req, res) => {
     try {
       const response = await sessionRepo.create({
@@ -27,7 +29,8 @@ export const createSession = async (req, res) => {
         err: error
       });
     }
-  };
+};
+
 
 export const getAllSession = async (req, res)=>{
 
@@ -76,5 +79,34 @@ export const getSession = async (req, res)=>{
             success: false,
             err: error
         })
+    }
+}
+
+
+export const addUserSession = async (req, res)=>{
+
+    const {userId, sessionIds} = req.body;
+
+    try {
+        console.log(userId);
+        const user = await User.findOne({_id: userId});
+
+        console.log(user);
+        if(!user){
+            return res.status(200).json({error: "user not found"});
+        }
+
+
+        const sessions = await Session.find({_id: {$in: sessionIds}});
+
+        user.sessions.push(...sessions);
+
+        await user.save();
+
+        res.status(200).json({ message: 'sessions added successfully' });
+        console.log("sessions added");
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
     }
 }

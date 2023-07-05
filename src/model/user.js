@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { Jwt_key } from "../config/serverConfig.js";
 
+
 const userSchema = new mongoose.Schema({
     email:{
         type: String,
@@ -45,6 +46,10 @@ const userSchema = new mongoose.Schema({
         }],
         default: [],
       },
+      sessions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Session' // Reference the "Subject" model from the "subject" database
+      }]
 }, {timestamps: true})
 
 

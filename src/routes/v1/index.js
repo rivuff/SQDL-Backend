@@ -3,7 +3,7 @@ import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } 
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
-import { createSession, getAllSession, getSession } from "../../controller/session-controller.js";
+import { addUserSession, createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
 const router = express.Router();
 
@@ -39,5 +39,7 @@ router.post('/subject/add', addUserSubject);
 router.post('/session/create', createSession);
 router.get('/session/get', getSession);
 router.get('/session/getAll', getAllSession)
+
+router.post('/session/add', addUserSession)
 
 export default router
