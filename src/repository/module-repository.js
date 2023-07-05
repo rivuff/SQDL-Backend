@@ -1,19 +1,19 @@
-import Subject from "../model/subject.js";
+import Module from "../model/module.js";
 
 
-class SubjectRepository{
-    async create(data){
+class ModuleRepository {
+    async create(data) {
         try {
-            const response = Subject.create(data);
+            const response = Module.create(data);
             return response
         } catch (error) {
-            console.log("user repo ",error);
+            console.log("Module repo ", error);
             throw error;
         }
     }
     async findByID(_id) {
         try {
-            const response = await Subject.findOne({ _id: _id });
+            const response = await Module.findOne({ _id: _id });
             return response;
         } catch (error) {
             console.log("Something went wrong in repository layer");
@@ -21,17 +21,15 @@ class SubjectRepository{
         }
     }
 
-    async getAll(offset, limit){
+    async getAllFromSubjectId(_id) {
         try {
-            const subjects = Subject.find().skip(offset).limit(limit);
-            return subjects;
+            const modules = Module.findAll({parentSubject: _id});
+            return modules;
         } catch (error) {
             console.log("Something went wrong in repository layer");
             throw error
         }
     }
-
-   
 }
 
-export default SubjectRepository;
+export default ModuleRepository;
