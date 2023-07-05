@@ -2,8 +2,13 @@ import express from "express";
 import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
+
 import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
+
 import { addUserSession, createSession, getAllSession, getSession } from "../../controller/session-controller.js";
+
+import {createModule, getModuleById, getModulesBySubjectId} from '../../controller/module-controller.js'
+import { createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
 const router = express.Router();
 
@@ -30,6 +35,13 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject)
+
+//Module routes
+router.post('/module/create', createModule);
+router.post('/module/getAllFromSubjectID', getModulesBySubjectId)
+router.post('/module/getID', getModuleById)
+
+
 
 router.post('/subject/add', addUserSubject);
 

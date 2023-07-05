@@ -18,6 +18,10 @@ const sessionSchema = new mongoose.Schema({
     createdBy:{
         type: String,
         required: true
+    },
+    parentModule:{
+        type: String,
+        required: true
     }
 },{timestamps: true})
 

@@ -59,6 +59,7 @@ export const getAllSubject = async (req, res)=>{
    
 }
 
+
 export const addUserSubject = async (req, res)=>{
 
     const {userId, subjectIds} = req.body;
