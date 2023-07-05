@@ -3,10 +3,10 @@ import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } 
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
-import { createSession, getAllSession, getSession } from "../../controller/session-controller.js";
-import { createSession, getAllSession, getSession } from "../../controller/session-controller.js";
+import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
 import {createModule, getModuleById, getModulesBySubjectId} from '../../controller/module-controller.js'
+import { createSession, getAllSession, getSession } from "../../controller/session-controller.js";
+
 const router = express.Router();
 
 //SIGNUP Route
