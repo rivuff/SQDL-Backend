@@ -7,18 +7,18 @@ const subjectRepo = new SubjectRepository();
 
 export const createSubject = async(req, res)=> {
     try {
-        const response  = await subjectRepo.create({
+        const subject  = await subjectRepo.create({
             name: req.body.name,
             description: req.body.description,
             createdBy: req.body.createdBy
         })
 
-        console.log(response);
+        console.log(subject);
 
         return res.status(200).json({
             success: true,
             message:'Successfully created new user',
-            data: response,
+            data: subject,
             err: {}
         })
     } catch (error) {
@@ -26,7 +26,7 @@ export const createSubject = async(req, res)=> {
         return res.status(500).json({
             success: false,
             message: "something went wrong in controller",
-            data: {},
+            data: null,
             err: error
         })
     }
@@ -84,8 +84,32 @@ export const addUserSubject = async (req, res)=>{
         console.log("subject added");
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ error: 'Controller error' });
     }
 }
 
 
+export const getSubjectByID = async(req,res) =>{
+    try{
+        const  _id  = req.body._id
+        console.log(_id)
+        const subject = await subjectRepo.findByID(_id );
+        if (subject == null){
+            res.status(500).json({ success:false, message: 'Subject Not Found', err:{}, data:null });
+        }
+        else{
+            
+        res.status(200).json({
+            success:true,
+            data:subject,
+            message: 'Subject information fetch',
+            err: {}
+        })
+         }
+
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).json({ error: 'Contoller error' });
+    }
+}
