@@ -8,18 +8,17 @@ const moduleSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true
     },
     description: {
         type: String
     },
     createdBy: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     parentSubject: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject'
     }
 }, { timestamps: true })
 
@@ -39,7 +38,7 @@ async function generateUniqueModuleId() {
         // Generate a potential subject ID
         moduleId = 'MOD' + Math.random().toString().substring(2, 5);
         // Check if the subject ID already exists
-        const count = await Subject.countDocuments({ moduleId });
+        const count = await Module.countDocuments({ moduleId });
         if (count === 0) {
             // Unique subject ID generated
             return moduleId;
@@ -48,6 +47,6 @@ async function generateUniqueModuleId() {
 }
 
 
-const Subject = mongoose.model('Subject', subjectSchema);
+const Module = mongoose.model('Module', moduleSchema);
 
-export default Subject
+export default Module

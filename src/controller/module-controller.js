@@ -1,4 +1,4 @@
-import ModuleRepository from "../repository/subject-repository.js"
+import ModuleRepository from "../repository/module-repository.js"
 
 const moduleRepo = new ModuleRepository();
 
