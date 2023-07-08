@@ -8,7 +8,6 @@ import { addUserSubject, createSubject, getAllSubject } from "../../controller/s
 import { addUserSession, createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
 import {createModule, getModuleById, getModulesBySubjectId} from '../../controller/module-controller.js'
-import { createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
 const router = express.Router();
 
@@ -32,7 +31,6 @@ router.post('/admin/invite', inviteTeacher); //send invite to a teacher
 router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 
 //Subject routes
-
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject)
 
