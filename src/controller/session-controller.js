@@ -7,6 +7,8 @@ export const createSession = async (req, res) => {
     try {
       const response = await sessionRepo.create({
         title: req.body.title,
+        description: req.body.description,
+        parentModule: req.body.parentModule,
         topic: req.body.topic,
         startTime: req.body.startTime, // Corrected field assignment
         createdBy: req.body.createdBy
@@ -32,21 +34,19 @@ export const createSession = async (req, res) => {
 };
 
 
-export const getAllSession = async (req, res)=>{
+export const getSessionsByModuleId = async (req, res)=>{
+
 
     try {
-        console.log(req.query);
-        const {offset, limit} = req.query;
-        console.log(offset, limit);
-        const session =await sessionRepo.getAll(parseInt(offset), parseInt(limit));
-
+        const _id = req.body._id
+        const session = await sessionRepo.getAllFromSubjectId(_id)
         return res.status(200).json({
             success: true,
-            message: 'Session retrieved successfully',
+            message: 'Sessions retrieved successfully',
             data: session,
             err: {}
         });
-    
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -81,7 +81,29 @@ export const getSession = async (req, res)=>{
         })
     }
 }
+export const getSessionById = async (req, res) => {
 
+    try {
+        const _id = req.body._id
+        const session = await sessionRepo.get(_id)
+        return res.status(200).json({
+            success: true,
+            message: 'Session retrieved successfully',
+            data: session,
+            err: {}
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in in session controller',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+
+}
 
 export const addUserSession = async (req, res)=>{
 

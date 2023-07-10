@@ -23,7 +23,7 @@ class ModuleRepository {
 
     async getAllFromSubjectId(_id) {
         try {
-            const modules = Module.findAll({parentSubject: _id});
+            const modules = Module.find({parentSubject: _id});
             return modules;
         } catch (error) {
             console.log("Something went wrong in repository layer");

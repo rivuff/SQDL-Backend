@@ -3,17 +3,17 @@ import mongoose from "mongoose";
 const sessionSchema = new mongoose.Schema({
     title:{
         type: String,
-        unique: true,
+        required: true
+    },    description:{
+        type: String,
         required: true
     },
     topic:{
         type: String,
-        unique: true,
-        required: true
+
     },
     startTime: {
         type: Date,
-        required: true
     },
     createdBy:{
         type: String,

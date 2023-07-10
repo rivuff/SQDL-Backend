@@ -31,6 +31,15 @@ class sessionRepository{
             throw error
         }
     }
+    async getAllFromSubjectId(_id) {
+        try {
+            const sessions = Session.find({ parentModule: _id });
+            return sessions;
+        } catch (error) {
+            console.log("Something went wrong in repository layer");
+            throw error
+        }
+    }
 }
 
 export default sessionRepository
