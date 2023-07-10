@@ -79,9 +79,15 @@ async function generateUniqueStudentId() {
 
 userSchema.pre('save', function(next){
     const student = this;
+
+    // Check if the password field is already hashed or if it is the same as the hashed password
+    if (!student.isModified('password') || student.password.startsWith('$2b$')) {
+        return next();
+    }
+
     const SALT = bcrypt.genSaltSync(9);
-    const encriptedPassword = bcrypt.hashSync(student.password, SALT);
-    student.password = encriptedPassword;
+    const encryptedPassword = bcrypt.hashSync(student.password, SALT);
+    student.password = encryptedPassword;
     next();
 })
 
