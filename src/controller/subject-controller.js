@@ -109,7 +109,31 @@ export const getSubjectByID = async(req,res) =>{
 
     }
     catch(error){
-        console.error(error);
+        console.error(error); subjects = await subjectRepo.find
         res.status(500).json({ error: 'Contoller error' });
+    }
+}
+
+export const userSubject = async(req,res)=>{
+    try{
+        const subject_ids = req.body._id
+        const subjects = []
+        for (let i =0; i<subject_ids.length; i++){
+            subjects.push(await Subject.find({ _id: subject_ids[i] }));
+        }
+        res.status(200).json({
+            success:true,
+            data:subjects,
+            message: "Subjects fetched successfully",
+            err: {}
+        })
+    }
+    catch(error){
+    console.log(error)
+    res.status(500).json({
+        success: false,
+        message: 'Something went wrong with the controller layer'
+    })
+
     }
 }

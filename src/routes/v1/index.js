@@ -4,7 +4,7 @@ import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
 import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
-import { createModule, getModuleById, getModulesBySubjectId } from '../../controller/module-controller.js'
+import { createModule, getModuleById, getModulesBySubjectId, moduleUpdate } from '../../controller/module-controller.js'
 import { addUserSession, createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
 
@@ -38,6 +38,7 @@ router.post('/subject/getByID', getSubjectByID)
 router.post('/module/create', createModule);
 router.post('/module/getAllFromSubjectID', getModulesBySubjectId)
 router.post('/module/getID', getModuleById)
+router.post('/module/update', moduleUpdate)
 
 
 
