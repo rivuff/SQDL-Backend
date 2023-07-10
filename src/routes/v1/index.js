@@ -3,11 +3,11 @@ import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } 
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
-
+import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
+import { createModule, getModuleById, getModulesBySubjectId, moduleUpdate } from '../../controller/module-controller.js'
 import { addUserSession, createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
-import {createModule, getModuleById, getModulesBySubjectId} from '../../controller/module-controller.js'
+
 
 const router = express.Router();
 
@@ -33,11 +33,13 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 //Subject routes
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject)
+router.post('/subject/getByID', getSubjectByID)
 
 //Module routes
 router.post('/module/create', createModule);
 router.post('/module/getAllFromSubjectID', getModulesBySubjectId)
 router.post('/module/getID', getModuleById)
+router.post('/module/update', moduleUpdate)
 
 
 
