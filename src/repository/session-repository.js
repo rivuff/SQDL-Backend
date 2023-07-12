@@ -31,7 +31,7 @@ class sessionRepository{
             throw error
         }
     }
-    async getAllFromSubjectId(_id) {
+    async getAllFromModuleId(_id) {
         try {
             const sessions = Session.find({ parentModule: _id });
             return sessions;

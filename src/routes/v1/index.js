@@ -3,9 +3,9 @@ import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } 
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
+import { addUserSubject, createSubject, getAllSubject, getSubjectByID, subjectUpdate } from "../../controller/subject-controller.js";
 import { createModule, getModuleById, getModulesBySubjectId, moduleUpdate } from '../../controller/module-controller.js'
-import { addUserSession, createSession, getSessionsByModuleId, getSession, getSessionById } from "../../controller/session-controller.js";
+import { addUserSession, createSession, getSessionsByModuleId, getSession, editSession } from "../../controller/session-controller.js";
 
 
 
@@ -35,20 +35,20 @@ router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject)
 router.post('/subject/getByID', getSubjectByID)
 router.post('/subject/add', addUserSubject);
+router.post('/subject/update', subjectUpdate);
 
 
 //Module routes
 router.post('/module/create', createModule);
-router.post('/modlue/getAllFromSubjectID', getModulesBySubjectId)
+router.post('/module/getAllFromSubjectID', getModulesBySubjectId)
 router.post('/module/getID', getModuleById)
 router.post('/module/update', moduleUpdate)
 
 //session routes
 router.post('/session/create', createSession);
-router.get('/session/get', getSession);
-router.post('/session/getID', getSessionById);
-router.get('/session/getAllFromModuleID', getSessionsByModuleId)
-
+router.post('/session/get', getSession);
+router.post('/session/getAllFromModuleID', getSessionsByModuleId)
 router.post('/session/add', addUserSession)
+router.post('/session/update', editSession)
 
 export default router

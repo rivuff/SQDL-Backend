@@ -119,7 +119,7 @@ export const userSubject = async(req,res)=>{
         const subject_ids = req.body._id
         const subjects = []
         for (let i =0; i<subject_ids.length; i++){
-            subjects.push(await Subject.find({ _id: subject_ids[i] }));
+            subjects.push(await subjectRepo.findByID(subject_ids[i]));
         }
         res.status(200).json({
             success:true,
@@ -136,4 +136,34 @@ export const userSubject = async(req,res)=>{
     })
 
     }
+}
+
+export const subjectUpdate = async (req, res) => {
+    const subject = await subjectRepo.findByID(req.body._id)
+    console.log(req.body._id)
+    if (req.body.name != null) {
+        subject.name = req.body.name
+    }
+    if (req.body.description != null) {
+        subject.description = req.body.description
+    }
+    try {
+        const newsub = await subject.save()
+        return res.status(200).json({
+            message: 'Succesfully updated subject',
+            data: newsub,
+            success: subject,
+            err: {}
+        })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message: 'Something went wrong in in subject controller',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+
 }
