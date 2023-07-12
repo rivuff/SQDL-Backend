@@ -1,7 +1,8 @@
 //import TeacherRepository from "../repository/user-repository.js";
 import { set } from "mongoose";
 import UserRepository from "../repository/user-repository.js";
-
+import Session from "../model/session.js";
+import User from "../model/user.js";
 const userRepo = new UserRepository();
 
 export const userSignup = async (req, res)=> {
@@ -238,4 +239,25 @@ export const getAlluser = async (req, res)=>{
         })
     }
    
+}
+
+export const getUserSession = async(req, res)=>{
+    const userId = req.query.userId;
+
+    try {
+        const user = await User.findById(userId).populate('sessions');
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const sessionIds = user.sessions.map(session => session._id);
+  
+      const sessions = await Session.find({ _id: { $in: sessionIds } });
+  
+      return res.json({ sessions });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
 }

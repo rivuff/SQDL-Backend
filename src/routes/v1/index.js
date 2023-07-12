@@ -1,9 +1,9 @@
 import express from "express";
-import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } from "../../controller/user-controller.js";
+import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
+import { addUserSubject, createSubject, getAllSubject, getSubject } from "../../controller/subject-controller.js";
 
 import { addUserSession, createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
@@ -18,6 +18,7 @@ router.post('/user/login', userLogin);  //user login
 router.post('/user/delete', deleteUser);//delete user
 //Data Update ROUTES
 router.post('/user/update', updateInfo) // update information
+router.get('/user/getSession', getUserSession)
 
 
 //Data Query ROUTES
@@ -33,6 +34,7 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 //Subject routes
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject)
+router.get('/subject/get', getSubject)
 
 //Module routes
 router.post('/module/create', createModule);

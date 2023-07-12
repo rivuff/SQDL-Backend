@@ -32,6 +32,22 @@ export const createSubject = async(req, res)=> {
     }
 }
 
+export const getSubject = async(req, res)=>{
+    try {
+        const data = await subjectRepo.findByID(req.query.subjectId);
+
+        return res.json({data: data})
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "something went wrong in controller",
+            data: {},
+            err: error
+        })
+    }
+}
+
 
 export const getAllSubject = async (req, res)=>{
 

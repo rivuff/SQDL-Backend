@@ -22,7 +22,12 @@ const sessionSchema = new mongoose.Schema({
     parentModule:{
         type: String,
         required: true
+    },
+    subject:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject' // Reference the "Subject" model from the "subject" database
     }
+
 },{timestamps: true})
 
 const Session = mongoose.model('Session', sessionSchema);
