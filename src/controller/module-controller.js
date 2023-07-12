@@ -1,4 +1,4 @@
-import ModuleRepository from "../repository/subject-repository.js"
+import ModuleRepository from "../repository/module-repository.js"
 
 const moduleRepo = new ModuleRepository();
 
@@ -83,3 +83,31 @@ export const getModuleById = async (req, res) => {
 
 }
 
+export const moduleUpdate = async (req,res)=>{
+    const module = await moduleRepo.findByID(req.body._id)
+    if(req.body.name!=null){
+        module.name = req.body.name
+    }
+    if (req.body.description!=null){
+        module.description= req.body.description
+    }
+    try{
+        const newmod = await module.save()
+        return res.status(200).json({
+            message: 'Succesfully updated module',
+            data: newmod,
+            success: true,
+            err: {}
+        })
+    }
+    catch(error){
+        console.log(error)
+        return res.status(500).json({
+            message: 'Something went wrong in in module controller',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+
+}

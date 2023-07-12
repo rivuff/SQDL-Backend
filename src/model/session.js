@@ -1,19 +1,22 @@
 import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema({
-    title:{
+    title:{ //same as topic
         type: String,
-        unique: true,
         required: true
     },
-    topic:{
+    description:{
         type: String,
-        unique: true,
         required: true
     },
+    // topic:{
+    //     type: String,
+    // },
     startTime: {
         type: Date,
-        required: true
+    },
+    conductedBy:{
+        type: String,
     },
     createdBy:{
         type: String,
@@ -22,7 +25,44 @@ const sessionSchema = new mongoose.Schema({
     parentModule:{
         type: String,
         required: true
+    },
+    enrollmentLimit:{
+        type: Number,
+        default: 40,
+    },
+    access_request:{
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        }],
+        default: [],
+    },
+    approved_request:{
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        }],
+        default: [],
+    },
+    blocked_request:{
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        }],
+        default: [],
+    },
+    activity_order:{ 
+        type:[{
+            type: String,
+            default: null
+        }]
+        },
+    iteration:{
+        type: [{
+            type: String
+        }]
     }
+
 },{timestamps: true})
 
 const Session = mongoose.model('Session', sessionSchema);
