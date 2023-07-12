@@ -3,11 +3,9 @@ import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, g
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject, getSubject } from "../../controller/subject-controller.js";
+import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
 
-import { addUserSession, createSession, getAllSession, getSession } from "../../controller/session-controller.js";
 
-import {createModule, getModuleById, getModulesBySubjectId} from '../../controller/module-controller.js'
 
 const router = express.Router();
 
@@ -34,24 +32,18 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 //Subject routes
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject)
-router.get('/subject/get', getSubject)
 
 //Module routes
 router.post('/module/create', createModule);
 router.post('/module/getAllFromSubjectID', getModulesBySubjectId)
 router.post('/module/getID', getModuleById)
-
-
-
-router.post('/subject/add', addUserSubject);
-
+router.post('/module/update', moduleUpdate)
 
 //session routes
-
 router.post('/session/create', createSession);
-router.get('/session/get', getSession);
-router.get('/session/getAll', getAllSession)
-
+router.post('/session/get', getSession);
+router.post('/session/getAllFromModuleID', getSessionsByModuleId)
 router.post('/session/add', addUserSession)
+router.post('/session/update', editSession)
 
 export default router

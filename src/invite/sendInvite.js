@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken'
 const userRepo = new UserRepository();
 
 const inviteTeacher = async (req, res) => {
+    console.log('invite path')
     //checking if user with email exists
     console.log(req.body.email)
     const user = await userRepo.findBy(req.body.email);
@@ -27,7 +28,8 @@ const inviteTeacher = async (req, res) => {
         rollNumber: null,
         password: "",
         status: "invited",
-        type: "teacher"
+        type: "teacher",
+        subjects: req.body.subject
     }).then((response)=>{
         console.log(response)
         const token = jwt.sign({
