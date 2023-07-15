@@ -46,10 +46,18 @@ const userSchema = new mongoose.Schema({
         }],
         default: [],
       },
-      sessions: [{
+    sessions: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Session' // Reference the "Subject" model from the "subject" database
-      }]
+    }],
+    allowedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    questions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Question'
+    }]
 }, {timestamps: true})
 
 

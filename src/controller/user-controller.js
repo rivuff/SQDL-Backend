@@ -3,6 +3,7 @@ import { set } from "mongoose";
 import UserRepository from "../repository/user-repository.js";
 import Session from "../model/session.js";
 import User from "../model/user.js";
+import Question from "../model/question.js";
 const userRepo = new UserRepository();
 
 export const userSignup = async (req, res)=> {
@@ -134,6 +135,7 @@ export const updateInfo = async(req, res) =>{
  
 }
 
+
 export const deleteUser = async(req, res)=>{
     console.log(req.body.email)
     try {
@@ -261,3 +263,61 @@ export const getUserSession = async(req, res)=>{
       return res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+export const addTeacherToStudent = async (req, res)=>{
+
+    const {studentId, teacherIds} = req.body;
+
+    try {
+        console.log(studentId);
+        const user = await User.findOne({ _id: studentId });
+    
+        console.log(user);
+        if (!user) {
+          return res.status(200).json({ error: "user not found" });
+        }
+    
+        const teachers = await User.find({ _id: { $in: teacherIds } });
+    
+        user.allowedBy.push(...teachers);
+    
+        await user.save();
+    
+        res.status(200).json({ message: "Teachers added successfully" });
+        console.log("Teachers added");
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Controller error' });
+    }
+}
+
+export const addQuestionToUser = async(req, res)=>{
+    const {questionId, studentId} = req.body
+
+    try {
+        const { questionId, studentId } = req.body;
+
+        const user = await User.findOne({ _id: studentId });
+        if (!user) {
+        return res.status(404).json({ error: "User not found" });
+        }
+
+        const question = await Question.findById(questionId);
+        if (!question) {
+        return res.status(404).json({ error: "Question not found" });
+        }
+
+        user.questions.push(question);
+        await user.save();
+
+        res.status(200).json({ message: "Question added successfully" });
+        console.log("Question added");
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ error: 'Controller error' });
+        
+
+    }
+}
+

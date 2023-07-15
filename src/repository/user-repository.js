@@ -21,6 +21,7 @@ class UserRepository{
             throw error
         }
     }
+    
    async findByID(_id){
         try {
             const response = await User.findOne({_id:_id});
