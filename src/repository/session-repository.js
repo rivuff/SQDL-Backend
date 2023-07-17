@@ -24,7 +24,6 @@ class sessionRepository{
     async get(_id){
         try {
             const session = await Session.findOne({_id:_id})
-            console.log(session);
             return session;
         } catch (error) {
             console.log("Something went wrong in session repository layer");

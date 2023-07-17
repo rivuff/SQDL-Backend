@@ -115,6 +115,17 @@ export const updateInfo = async(req, res) =>{
             user.type = req.body.type;
             // console.log(user.type);
         }
+        if (req.body.subjects != null) {
+            user.subjects = req.body.subjects;
+            // console.log(user.status);
+        } if (req.body.sessions != null) {
+            user.sessions = req.body.sessions;
+            // console.log(user.type);
+        }
+        if (req.body.allowedBy != null) {
+            user.allowedBy = req.body.allowedBy;
+            // console.log(user.enrollmentNumber);
+        }
         const updateUser = await user.save();
         console.log('updated')
         return res.status(200).json({

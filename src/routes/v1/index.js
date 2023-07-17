@@ -3,7 +3,7 @@ import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, g
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
+import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
 import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
 import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession} from "../../controller/session-controller.js"
 import { addPriorityByPeer, createQuestion } from "../../controller/question-controller.js";
@@ -34,6 +34,7 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 //Subject routes
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject);
+router.post('/subject/getByID', getSubjectByID);
 router.post('/subject/addUserSubject', addUserSubject)
 
 //Module routes

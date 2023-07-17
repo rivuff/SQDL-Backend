@@ -106,6 +106,7 @@ export const addUserSubject = async (req, res)=>{
 
 
 export const getSubjectByID = async(req,res) =>{
+    
     try{
         const  _id  = req.body._id
         console.log(_id)
@@ -125,7 +126,7 @@ export const getSubjectByID = async(req,res) =>{
 
     }
     catch(error){
-        console.error(error); subjects = await subjectRepo.find
+        console.error(error); 
         res.status(500).json({ error: 'Contoller error' });
     }
 }
