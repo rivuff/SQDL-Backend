@@ -1,10 +1,20 @@
 import sessionRepository from "../repository/session-repository.js";
 import User from "../model/user.js";
 import Session from "../model/session.js";
+import Subject from "../model/subject.js";
 const sessionRepo = new sessionRepository();
+
 
 export const createSession = async (req, res) => {
     try {
+
+        const existingSubject = await Subject.findById(req.body.subject);
+
+        if (!existingSubject) {
+          return res.status(404).json({ error: 'Subject not found' });
+        }
+
+
       const response = await sessionRepo.create({
         title: req.body.title,
         description: req.body.description,
@@ -14,10 +24,14 @@ export const createSession = async (req, res) => {
         activity_order: req.body.activity_order,
         topic: req.body.topic,
         startTime: req.body.startTime, // Corrected field assignment
-        createdBy: req.body.createdBy
+        createdBy: req.body.createdBy,
+        parentModule: req.body.parentModule,
+        subject: req.body.subject
       });
   
       console.log(response);
+
+
   
       return res.status(200).json({
         success: true,
@@ -25,7 +39,8 @@ export const createSession = async (req, res) => {
         data: response,
         err: {}
       });
-    } catch (error) {
+    } 
+    catch (error) {
       console.log(error);
       return res.status(500).json({
         success: false,

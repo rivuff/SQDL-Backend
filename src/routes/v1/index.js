@@ -1,13 +1,12 @@
 import express from "express";
-import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser } from "../../controller/user-controller.js";
+import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject, getSubjectByID, subjectUpdate } from "../../controller/subject-controller.js";
-import { createModule, getModuleById, getModulesBySubjectId, moduleUpdate } from '../../controller/module-controller.js'
-import { addUserSession, createSession, getSessionsByModuleId, getSession, editSession } from "../../controller/session-controller.js";
-
-
+import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
+import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
+import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession} from "../../controller/session-controller.js"
+import { addPriorityByPeer, createQuestion } from "../../controller/question-controller.js";
 
 const router = express.Router();
 
@@ -18,7 +17,9 @@ router.post('/user/login', userLogin);  //user login
 router.post('/user/delete', deleteUser);//delete user
 //Data Update ROUTES
 router.post('/user/update', updateInfo) // update information
-
+router.get('/user/getSession', getUserSession)
+router.post('/user/addTeacher', addTeacherToStudent) //array of teachers allowed that student to enter
+router.post('/user/addquestion', addQuestionToUser); //array of question a student asked
 
 //Data Query ROUTES
 router.get('/user/get', get); // get a user
@@ -32,11 +33,8 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 
 //Subject routes
 router.post('/subject/create', createSubject);
-router.get('/subject/getAll', getAllSubject)
-router.post('/subject/getByID', getSubjectByID)
-router.post('/subject/add', addUserSubject);
-router.post('/subject/update', subjectUpdate);
-
+router.get('/subject/getAll', getAllSubject);
+router.post('/subject/addUserSubject', addUserSubject)
 
 //Module routes
 router.post('/module/create', createModule);
@@ -50,5 +48,10 @@ router.post('/session/get', getSession);
 router.post('/session/getAllFromModuleID', getSessionsByModuleId)
 router.post('/session/add', addUserSession)
 router.post('/session/update', editSession)
+
+//Question routes
+
+router.post('/question/create', createQuestion)
+router.post('/question/priorityByPeer', addPriorityByPeer)
 
 export default router

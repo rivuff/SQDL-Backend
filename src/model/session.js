@@ -26,6 +26,11 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+    subject:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject' // Reference the "Subject" model from the "subject" database
+    },
     enrollmentLimit:{
         type: Number,
         default: 40,
