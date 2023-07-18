@@ -2,6 +2,7 @@ import sessionRepository from "../repository/session-repository.js";
 import User from "../model/user.js";
 import Session from "../model/session.js";
 import Subject from "../model/subject.js";
+import Question from "../model/question.js";
 const sessionRepo = new sessionRepository();
 
 
@@ -134,6 +135,37 @@ export const addUserSession = async (req, res)=>{
 }
 
 
+export const addQuestionToSession = async(req, res)=>{
+    
+    try {
+        const {sessionId, questionId} = req.query;
+
+        const session = await Session.findById(sessionId);
+        if (!session) {
+            return res.status(200).json({ error: "session not found" });
+        }
+
+        const question = await Question.findById(questionId);
+
+        if (!session) {
+            return res.status(200).json({ error: "question not found" });
+        }
+
+        session.questions.push(question);
+        
+        session.save();
+
+        res.status(200).json({ message: "Question added successfully" });
+        console.log("Question added");
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Controller error' });
+    }
+}
+
+
+
 export const editSession = async (req,res)=>{
     //checking submitted fields
     try{
@@ -197,3 +229,5 @@ export const editSession = async (req,res)=>{
         })
     }
 }
+
+

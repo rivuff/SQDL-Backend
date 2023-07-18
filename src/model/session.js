@@ -42,6 +42,12 @@ const sessionSchema = new mongoose.Schema({
         }],
         default: [],
     },
+    questions: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Question',
+        },
+    ],
     approved_request:{
         type: [{
             type: mongoose.Schema.Types.ObjectId,
@@ -69,6 +75,7 @@ const sessionSchema = new mongoose.Schema({
     }
 
 },{timestamps: true})
+
 
 const Session = mongoose.model('Session', sessionSchema);
 export default Session
