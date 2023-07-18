@@ -315,7 +315,7 @@ export const addQuestionToUser = async(req, res)=>{
         await user.save();
 
         res.status(200).json({ message: "Question added successfully" });
-        console.log("Question added");
+        console.log("Question added to user");
 
     } catch (error) {
 

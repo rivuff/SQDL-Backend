@@ -5,8 +5,9 @@ import acceptInvite from "../../invite/acceptInvite.js"
 
 import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
 import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
-import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession, addQuestionToSession} from "../../controller/session-controller.js"
-import { addPriorityByPeer, createQuestion } from "../../controller/question-controller.js";
+import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession, addQuestionToSession, getAllQuestionFromSession, addCurrsession} from "../../controller/session-controller.js"
+import { addPriorityByPeer, createQuestion, getQuestionsByUserId } from "../../controller/question-controller.js";
+
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.post('/user/signup', userSignup);
 //LOGIN Route
 router.post('/user/login', userLogin);  //user login
 router.post('/user/delete', deleteUser);//delete user
+router.post('/user/addcurrsession', addCurrsession)// adding current session
 //Data Update ROUTES
 router.post('/user/update', updateInfo) // update information
 router.get('/user/getSession', getUserSession)
@@ -49,10 +51,11 @@ router.post('/session/getAllFromModuleID', getSessionsByModuleId)
 router.post('/session/add', addUserSession)
 router.post('/session/update', editSession)
 router.post('/session/addQuestion', addQuestionToSession);
-
+router.get('/session/getsessionquestion', getAllQuestionFromSession)
 //Question routes
 
 router.post('/question/create', createQuestion)
 router.post('/question/priorityByPeer', addPriorityByPeer)
+router.get('/question/usrId', getQuestionsByUserId);
 
 export default router
