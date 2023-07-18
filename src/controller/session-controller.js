@@ -133,6 +133,7 @@ export const addUserSession = async (req, res)=>{
 
 export const editSession = async (req,res)=>{
     //checking submitted fields
+    console.log(req.body)
     try{
         const _id = req.body._id
         const session = await sessionRepo.get(_id)

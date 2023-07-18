@@ -1,5 +1,5 @@
 import express from "express";
-import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser } from "../../controller/user-controller.js";
+import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser, getByIDs } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
@@ -25,6 +25,7 @@ router.post('/user/addquestion', addQuestionToUser); //array of question a stude
 router.get('/user/get', get); // get a user
 router.get('/user/getall', getAlluser); // for getting all the users
 router.post('/user/getID', getByID);
+router.post('/user/getIDs', getByIDs);
 
 //Registration ROUTES
 router.post('/user/signup', userSignup); //student sign up

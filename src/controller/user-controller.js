@@ -228,6 +228,33 @@ export const getByID = async(req, res)=>{
     }
 }
 
+export const getByIDs = async(req, res)=>{
+    try {
+        const _ids = req.body._ids;
+        const users = []
+        for (let i = 0; i < _ids.length; i++){
+            const user = await userRepo.findByID(_ids[i]);
+            // console.log(_ids[i])
+            users.push(user)
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Users retrived successfully",
+            data: users,
+            err:{}
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in querying user information',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+}
+
 export const getAlluser = async (req, res)=>{
 
     try {
