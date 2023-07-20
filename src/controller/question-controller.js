@@ -11,8 +11,9 @@ export const createQuestion = async(req, res)=>{
             session: req.body.session,
             iterationIndex: req.body.iterationIndex,
             raisedBy: req.body.raisedBy,
-            priorityBySelf: req.body.priorityBySelf,
-    
+            priorityBySelf: req.body.questionPriority,
+            questionTag: req.body.questionType,
+            session: req.body.session
         })
 
         return res.status(200).json({

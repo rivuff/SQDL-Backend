@@ -69,9 +69,8 @@ const sessionSchema = new mongoose.Schema({
         }]
         },
     iteration:{
-        type: [{
-            type: String
-        }]
+        type: Number,
+        default: 1
     }
 
 },{timestamps: true})

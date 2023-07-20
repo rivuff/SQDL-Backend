@@ -5,6 +5,11 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  questionTag:{
+    type: String,
+    enum: ['Clarification', 'Exploratory'],
+    required: true
+  },
   session: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Session',
