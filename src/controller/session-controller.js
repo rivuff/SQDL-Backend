@@ -30,7 +30,6 @@ export const createSession = async (req, res) => {
         subject: req.body.subject
       });
   
-      console.log(response);
 
 
   
@@ -117,7 +116,6 @@ export const getSessionsByModuleId = async (req, res)=>{
 export const getSession = async (req, res)=>{
     try {
         const response = await sessionRepo.get(req.body._id);
-        console.log(response);
 
 
         return res.status(200).json({
@@ -143,7 +141,6 @@ export const addUserSession = async (req, res)=>{
     const {userId, sessionIds} = req.body;
 
     try {
-        console.log(userId);
         const user = await User.findOne({_id: userId});
 
         console.log(user);
@@ -219,9 +216,11 @@ export const getAllQuestionFromSession = async(req, res)=>{
 
 export const editSession = async (req,res)=>{
     //checking submitted fields
+    console.log(req.body)
     try{
         const _id = req.body._id
         const session = await sessionRepo.get(_id)
+        console.log(session)
         if (session == null){
             return res.status(404).json({
                 message: 'Session does not exist',
@@ -264,6 +263,7 @@ export const editSession = async (req,res)=>{
             session.iteration = req.body.iteration
         }
         const updatedSession = await session.save()
+        console.log('W00000',updatedSession)
         return res.status(200).json({
             message: 'Session updated',
             data: updatedSession,
@@ -272,6 +272,7 @@ export const editSession = async (req,res)=>{
         })
     }
     catch(error){
+        console.log(error)
         return res.status(500).json({
             message: 'Something went wrong with the sessions controller endpoint',
             data: null,

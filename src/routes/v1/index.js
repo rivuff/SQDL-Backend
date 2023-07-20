@@ -1,9 +1,9 @@
 import express from "express";
-import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser } from "../../controller/user-controller.js";
+import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser, getByIDs } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js"
 import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject } from "../../controller/subject-controller.js";
+import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
 import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
 import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession, addQuestionToSession, getAllQuestionFromSession, addCurrsession} from "../../controller/session-controller.js"
 import { addPriorityByPeer, createQuestion, getQuestionsByUserId } from "../../controller/question-controller.js";
@@ -27,6 +27,7 @@ router.post('/user/addquestion', addQuestionToUser); //array of question a stude
 router.get('/user/get', get); // get a user
 router.get('/user/getall', getAlluser); // for getting all the users
 router.post('/user/getID', getByID);
+router.post('/user/getIDs', getByIDs);
 
 //Registration ROUTES
 router.post('/user/signup', userSignup); //student sign up
@@ -36,6 +37,7 @@ router.post('/teacher/accept', acceptInvite); //send invite to a teacher
 //Subject routes
 router.post('/subject/create', createSubject);
 router.get('/subject/getAll', getAllSubject);
+router.post('/subject/getByID', getSubjectByID);
 router.post('/subject/addUserSubject', addUserSubject)
 
 //Module routes
