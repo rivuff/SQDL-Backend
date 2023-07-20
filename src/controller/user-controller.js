@@ -4,6 +4,8 @@ import UserRepository from "../repository/user-repository.js";
 import Session from "../model/session.js";
 import User from "../model/user.js";
 import Question from "../model/question.js";
+
+
 const userRepo = new UserRepository();
 
 export const userSignup = async (req, res)=> {
@@ -180,8 +182,6 @@ export const deleteUser = async(req, res)=>{
 }
 
 
-
-
 export const get = async(req, res)=>{
     try {
         const {email} = req.query;
@@ -205,6 +205,7 @@ export const get = async(req, res)=>{
         })
     }
 }
+
 export const getByID = async(req, res)=>{
     try {
         const {_id} = req.body;
@@ -302,11 +303,13 @@ export const getUserSession = async(req, res)=>{
     }
 }
 
+
 export const addTeacherToStudent = async (req, res)=>{
 
     const {studentId, teacherIds} = req.body;
 
     try {
+
         console.log(studentId);
         const user = await User.findOne({ _id: studentId });
     
@@ -323,14 +326,15 @@ export const addTeacherToStudent = async (req, res)=>{
     
         res.status(200).json({ message: "Teachers added successfully" });
         console.log("Teachers added");
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Controller error' });
     }
 }
 
+
 export const addQuestionToUser = async(req, res)=>{
-    const {questionId, studentId} = req.body
 
     try {
         const { questionId, studentId } = req.body;
@@ -349,12 +353,12 @@ export const addQuestionToUser = async(req, res)=>{
         await user.save();
 
         res.status(200).json({ message: "Question added successfully" });
-        console.log("Question added");
+        console.log("Question added to user");
+
     } catch (error) {
 
         console.error(error);
         res.status(500).json({ error: 'Controller error' });
-        
 
     }
 }

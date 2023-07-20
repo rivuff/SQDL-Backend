@@ -33,6 +33,8 @@ export const createQuestion = async(req, res)=>{
     }  
 }
 
+
+
 export const getAllQuestion = async(req, res)=>{
     try {
         const response = questionRepo.getAll({

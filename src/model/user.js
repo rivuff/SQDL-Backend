@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Session' // Reference the "Subject" model from the "subject" database
     }],
+    currSession:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Session'
+    },
     allowedBy: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

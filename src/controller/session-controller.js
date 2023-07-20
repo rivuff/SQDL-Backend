@@ -2,6 +2,7 @@ import sessionRepository from "../repository/session-repository.js";
 import User from "../model/user.js";
 import Session from "../model/session.js";
 import Subject from "../model/subject.js";
+import Question from "../model/question.js";
 const sessionRepo = new sessionRepository();
 
 
@@ -49,6 +50,34 @@ export const createSession = async (req, res) => {
       });
     }
 };
+
+
+export const addCurrsession = async(req, res)=>{
+    try {
+        
+        const {sessionId, userId} = req.body
+        const user = await User.findByIdAndUpdate(userId, { currSession: sessionId }, { new: true });
+
+        if (!user) {
+        console.log('User not found');
+        } else {
+        console.log('Updated user:', user);
+        }
+        
+        res.status(200).json({
+            message: "successfully added current session"
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in in Session controller',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+}
 
 
 export const getSessionsByModuleId = async (req, res)=>{
@@ -131,6 +160,60 @@ export const addUserSession = async (req, res)=>{
 }
 
 
+export const addQuestionToSession = async(req, res)=>{
+    
+    try {
+        const {sessionId, questionId} = req.query;
+
+        const session = await Session.findById(sessionId);
+        if (!session) {
+            return res.status(200).json({ error: "session not found" });
+        }
+
+        const question = await Question.findById(questionId);
+
+        if (!session) {
+            return res.status(200).json({ error: "question not found" });
+        }
+
+        session.questions.push(question);
+        
+        session.save();
+
+        res.status(200).json({ message: "Question added successfully" });
+        console.log("Question added");
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Controller error' });
+    }
+}
+
+export const getAllQuestionFromSession = async(req, res)=>{
+    const sessionId = req.body.sessionId;
+
+    try {
+        // Find the session by its _id and populate the questions field with the full question data.
+        const session = await Session.findById(sessionId).populate('questions');
+    
+        if (!session) {
+          // Handle the case where the session with the provided _id does not exist.
+          console.log('Session not found');
+          return [];
+        }
+    
+        // Access the full question data from the populated questions field.
+        const questions = session.questions;
+        res.status(200).json(questions);
+        console.log(questions);
+      } catch (error) {
+        // Handle any errors that might occur during the database query.
+        console.error('Error fetching session questions:', error);
+        return [];
+    }
+}
+
+
 export const editSession = async (req,res)=>{
     //checking submitted fields
     console.log(req.body)
@@ -198,3 +281,5 @@ export const editSession = async (req,res)=>{
         })
     }
 }
+
+
