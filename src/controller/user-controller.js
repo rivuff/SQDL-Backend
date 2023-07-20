@@ -117,6 +117,17 @@ export const updateInfo = async(req, res) =>{
             user.type = req.body.type;
             // console.log(user.type);
         }
+        if (req.body.subjects != null) {
+            user.subjects = req.body.subjects;
+            // console.log(user.status);
+        } if (req.body.sessions != null) {
+            user.sessions = req.body.sessions;
+            // console.log(user.type);
+        }
+        if (req.body.allowedBy != null) {
+            user.allowedBy = req.body.allowedBy;
+            // console.log(user.enrollmentNumber);
+        }
         const updateUser = await user.save();
         console.log('updated')
         return res.status(200).json({
@@ -204,6 +215,33 @@ export const getByID = async(req, res)=>{
             success: true,
             message: "User retrived successfully",
             data: user,
+            err:{}
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Something went wrong in querying user information',
+            data: {},
+            success: false,
+            err: error
+        })
+    }
+}
+
+export const getByIDs = async(req, res)=>{
+    try {
+        const _ids = req.body._ids;
+        const users = []
+        for (let i = 0; i < _ids.length; i++){
+            const user = await userRepo.findByID(_ids[i]);
+            // console.log(_ids[i])
+            users.push(user)
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Users retrived successfully",
+            data: users,
             err:{}
         });
 
