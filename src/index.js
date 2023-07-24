@@ -18,16 +18,18 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     console.log('New client connected:', socket.id);
 
-    socket.on('FromAPI', (msg) => {
-        io.emit('FromAPI', msg);
-    });
-
     getApiAndEmit(socket);
 
     socket.on('disconnect', () => {
         console.log('Disconnected');
     });
-
+    socket.onAny((eventName, ...args) => {
+        // ...
+        if (eventName.includes('serversession')){
+            let arg = args[0]
+            socket.broadcast.emit("clientsession"+arg._id, arg);
+        }
+    });
 });
 
 

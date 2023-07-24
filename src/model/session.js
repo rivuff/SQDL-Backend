@@ -66,7 +66,8 @@ const sessionSchema = new mongoose.Schema({
         type:[{
             type: String,
             default: null
-        }]
+        }],
+        default:[null]
         },
     iteration:{
         type: Number,
