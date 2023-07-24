@@ -262,6 +262,9 @@ export const editSession = async (req,res)=>{
         if (req.body.iteration != null) {
             session.iteration = req.body.iteration
         }
+        if (req.body.current_activity != null) {
+            session.current_activity = req.body.current_activity
+        }
         const updatedSession = await session.save()
         console.log('W00000',updatedSession)
         return res.status(200).json({

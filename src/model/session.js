@@ -66,11 +66,15 @@ const sessionSchema = new mongoose.Schema({
         type:[{
             type: String,
             default: null
-        }]
+        }],
+        default:[null]
         },
     iteration:{
         type: Number,
         default: 1
+    },
+    current_activity:{
+        type:String
     }
 
 },{timestamps: true})
