@@ -8,6 +8,7 @@ const questionSchema = new mongoose.Schema({
   questionTag:{
     type: String,
     enum: ['Clarification', 'Exploratory'],
+    default: 'Clarification',
     required: true
   },
   session: {
