@@ -6,6 +6,7 @@ import cors from 'cors'
 import { PORT } from './config/serverConfig.js';
 import http from 'http'
 import { Server } from 'socket.io';
+import socketHandlers from './socket.js'
 
 const app = express();
 const server = http.createServer(app);
@@ -16,27 +17,12 @@ const io = new Server(server, {
   });
 
 io.on('connection', (socket) => {
-    console.log('New client connected:', socket.id);
-
-    getApiAndEmit(socket);
-
-    socket.on('disconnect', () => {
-        console.log('Disconnected');
-    });
-    socket.onAny((eventName, ...args) => {
-        // ...
-        if (eventName.includes('serversession')){
-            let arg = args[0]
-            socket.broadcast.emit("clientsession"+arg._id, arg);
-        }
-    });
+    console.log('User with id: ' +socket.id+' has connected')
+    socketHandlers(socket)
 });
 
 
-const getApiAndEmit = (socket) => {
-    const response = 'response you need';
-    socket.emit('FromAPI', response);
-  };
+
 // const socket = io();
 
 app.use(bodyParser.json());
