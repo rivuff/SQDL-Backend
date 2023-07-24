@@ -71,6 +71,9 @@ const sessionSchema = new mongoose.Schema({
     iteration:{
         type: Number,
         default: 1
+    },
+    current_activity:{
+        type:String
     }
 
 },{timestamps: true})
