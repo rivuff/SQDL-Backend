@@ -27,12 +27,12 @@ function socketHandlers(socket){
         let arg = args[0] //get sessionID
         
         if (eventName.includes('teacher')) { //types of action to teacher
-            socket.emit(eventName, {fetch: true});
+            socket.broadcast.emit(eventName, {fetch: true});
             console.log(eventName)
 
         }
         else if (eventName.includes('student')) {//types of action to students
-            socket.emit(eventName, { fetch: true });
+            socket.broadcast.emit(eventName, { fetch: true });
             console.log(eventName)
         }
     });
