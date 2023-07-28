@@ -163,7 +163,7 @@ export const addUserSession = async (req, res)=>{
 export const addQuestionToSession = async(req, res)=>{
     
     try {
-        const {sessionId, questionId} = req.query;
+        const {sessionId, questionId} = req.body;
 
         const session = await Session.findById(sessionId);
         if (!session) {
@@ -189,6 +189,7 @@ export const addQuestionToSession = async(req, res)=>{
     }
 }
 
+
 export const getAllQuestionFromSession = async(req, res)=>{
     const sessionId = req.body.sessionId;
 
@@ -211,6 +212,29 @@ export const getAllQuestionFromSession = async(req, res)=>{
         console.error('Error fetching session questions:', error);
         return [];
     }
+}
+
+
+export const deleteAllQuestionFromSession = async(req, res)=>{
+    const sessionId = req.body.sessionId;
+
+    try {
+        const session = await Session.findById(sessionId).deleteMany();
+    
+        if (!session) {
+          // Handle the case where the session with the provided _id does not exist.
+          console.log('Session not found');
+          return [];
+        }
+
+        res.status(200).json("Question Deleted")
+
+
+    } catch (error) {
+        console.error('Error fetching session questions:', error);
+        return [];
+    }
+
 }
 
 

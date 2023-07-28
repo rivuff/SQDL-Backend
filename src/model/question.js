@@ -9,7 +9,7 @@ const questionSchema = new mongoose.Schema({
     type: String,
     enum: ['Clarification', 'Exploratory'],
     default: 'Clarification',
-    required: true
+    //required: true
   },
   session: {
     type: mongoose.Schema.Types.ObjectId,
