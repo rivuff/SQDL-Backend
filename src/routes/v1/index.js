@@ -6,7 +6,7 @@ import acceptInvite from "../../invite/acceptInvite.js"
 import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
 import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
 import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession, addQuestionToSession, getAllQuestionFromSession, addCurrsession, deleteAllQuestionFromSession} from "../../controller/session-controller.js"
-import { addPriorityByPeer, createQuestion, getQuestionsByUserId } from "../../controller/question-controller.js";
+import { addPriorityByPeer, createQuestion, getQuestionUserIterationn, getQuestionsByUserId } from "../../controller/question-controller.js";
 
 
 const router = express.Router();
@@ -62,5 +62,6 @@ router.get('/session/questios/delete', deleteAllQuestionFromSession);
 router.post('/question/create', createQuestion)
 router.post('/question/priorityByPeer', addPriorityByPeer)
 router.get('/question/usrId', getQuestionsByUserId);
+router.get('/question/usrId', getQuestionUserIterationn);
 
 export default router
