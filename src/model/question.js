@@ -19,6 +19,7 @@ const questionSchema = new mongoose.Schema({
   iterationIndex: {
     type: Number,
     required: true,
+    default: 1
   },
   raisedBy: {
     type: mongoose.Schema.Types.ObjectId,
@@ -56,7 +57,8 @@ const questionSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
+  
+}, {timestamps:true});
 
 
 const Question = mongoose.model('Question', questionSchema);

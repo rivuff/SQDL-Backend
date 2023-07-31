@@ -77,6 +77,20 @@ export const getQuestionsByUserId = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
 
     }
+}
+export const getQuestions = async (req, res) => {
+    try {
+        const session =  req.body.session
+        const index =  req.body.index
+      const questions = await Question.find({ iteration: index, session: session });
+
+      res.status(200).json(questions);
+
+    } catch (error) {
+
+      res.status(500).json({ error: 'Internal server error' });
+
+    }
 };
   
 
