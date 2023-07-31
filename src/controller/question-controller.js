@@ -12,6 +12,7 @@ export const createQuestion = async(req, res)=>{
             iterationIndex: req.body.iterationIndex,
             raisedBy: req.body.raisedBy,
             priorityBySelf: req.body.questionPriority,
+            iteration: req.body.iteration,
             questionTag: req.body.questionType,
             session: req.body.session
         })

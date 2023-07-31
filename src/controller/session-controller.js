@@ -310,3 +310,76 @@ export const editSession = async (req,res)=>{
 }
 
 
+// Assuming you have access to the User and Question models, and a session ID.
+
+// Function to distribute questions among students for a given session.
+
+async function distributeQuestions(req, res) {
+
+    const sessionId = req.sessionId;
+    const z = req.priority;
+
+    try {
+      const session = await Session.findById(sessionId).populate('questions');
+      if (!session) {
+        throw new Error('Session not found.');
+      }
+  
+      const students = await User.find({ type: 'student' });
+      if (students.length === 0) {
+        throw new Error('No students found for the session.');
+      }
+  
+      const totalQuestions = session.questions.length;
+      const totalStudents = students.length;
+      const questionsPerStudent = Math.floor((totalQuestions * z) / (totalStudents * z));
+      const remainingQuestions = totalQuestions % (totalStudents * z);
+  
+      // Prepare the questions array with each question repeated z times.
+      const questionsRepeated = [];
+      for (const question of session.questions) {
+        for (let i = 0; i < z; i++) {
+          questionsRepeated.push(question);
+        }
+      }
+  
+      // Shuffle the questions randomly to ensure fairness in distribution.
+      const shuffledQuestions = questionsRepeated.sort(() => Math.random() - 0.5);
+  
+      let startIndex = 0;
+  
+      for (const student of students) {
+        let numQuestionsToAssign = questionsPerStudent;
+  
+        // If there are remaining questions, distribute them among students starting from the beginning.
+        if (remainingQuestions > 0) {
+          numQuestionsToAssign++;
+          remainingQuestions--;
+        }
+  
+        // Distribute the questions to the student, skipping their own questions.
+        const assignedQuestions = shuffledQuestions
+          .slice(startIndex, startIndex + numQuestionsToAssign)
+          .filter((question) => question.raisedBy.toString() !== student._id.toString());
+  
+        // Update the student's questions field.
+        student.questions = assignedQuestions.map((question) => question._id);
+        await student.save();
+  
+        startIndex += numQuestionsToAssign;
+      }
+  
+      // Save the updated session.
+      await session.save();
+  
+      console.log('Questions distributed successfully.');
+  
+      res.status(200).json({
+        message: "Question distributed successfully"
+
+    })
+    } catch (error) {
+      console.error('Error distributing and rating questions:', error.message);
+    }
+  }
+  
