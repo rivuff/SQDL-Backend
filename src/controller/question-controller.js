@@ -11,7 +11,7 @@ export const createQuestion = async(req, res)=>{
             session: req.body.session,
             iterationIndex: req.body.iterationIndex,
             raisedBy: req.body.raisedBy,
-            priorityBySelf: req.body.questionPriority,
+            priorityBySelf: req.body.priorityBySelf,
             iteration: req.body.iteration,
             questionTag: req.body.questionType,
             session: req.body.session
@@ -82,7 +82,7 @@ export const getQuestions = async (req, res) => {
     try {
         const session =  req.body.session
         const index =  req.body.index
-      const questions = await Question.find({ iteration: index, session: session });
+      const questions = await Question.find({ iterationIndex: index, session: session });
 
       res.status(200).json(questions);
 

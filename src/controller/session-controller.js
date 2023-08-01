@@ -269,7 +269,7 @@ export const editSession = async (req,res)=>{
             session.parentModule = req.body.parentModule
         }
         if (req.body.enrollmentLimit != null) {
-            session.enrollmentLimit = req.body.parentModule
+            session.enrollmentLimit = req.body.enrollmentLimit
         }
         if (req.body.access_request != null) {
             session.access_request = req.body.access_request
@@ -288,6 +288,9 @@ export const editSession = async (req,res)=>{
         }
         if (req.body.current_activity != null) {
             session.current_activity = req.body.current_activity
+        }
+        if (req.body.selected_questions != null) {
+            session.selected_questions = req.body.selected_questions
         }
         const updatedSession = await session.save()
         console.log('W00000',updatedSession)

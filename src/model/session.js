@@ -75,6 +75,17 @@ const sessionSchema = new mongoose.Schema({
     },
     current_activity:{
         type:String
+    },
+    selected_questions:{
+        type:[{
+            iteration:{
+                type: Number
+            },
+            questions:[{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Question',
+            }]
+        }]
     }
 
 },{timestamps: true})
