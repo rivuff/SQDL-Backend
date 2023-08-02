@@ -1,83 +1,109 @@
 import mongoose from "mongoose";
 
-const sessionSchema = new mongoose.Schema({
-    title:{ //same as topic
-        type: String,
-        required: true
+const sessionSchema = new mongoose.Schema(
+  {
+    title: {
+      //same as topic
+      type: String,
+      required: true,
     },
-    description:{
-        type: String,
-        required: true
+    description: {
+      type: String,
+      required: true,
     },
     // topic:{
     //     type: String,
     // },
     startTime: {
-        type: Date,
+      type: Date,
     },
-    conductedBy:{
-        type: String,
+    conductedBy: {
+      type: String,
     },
-    createdBy:{
-        type: String,
-        required: true
+    createdBy: {
+      type: String,
+      required: true,
     },
-    parentModule:{
-        type: String,
-        required: true
+    parentModule: {
+      type: String,
+      required: true,
     },
 
-    subject:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject' // Reference the "Subject" model from the "subject" database
+    subject: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subject", // Reference the "Subject" model from the "subject" database
     },
-    enrollmentLimit:{
-        type: Number,
-        default: 40,
+    enrollmentLimit: {
+      type: Number,
+      default: 40,
     },
-    access_request:{
-        type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-        }],
-        default: [],
-    },
-    questions: [
+    access_request: {
+      type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Question',
+          ref: "User",
         },
+      ],
+      default: [],
+    },
+    questions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question",
+      },
     ],
-    approved_request:{
-        type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-        }],
-        default: [],
-    },
-    blocked_request:{
-        type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-        }],
-        default: [],
-    },
-    activity_order:{ 
-        type:[{
-            type: String,
-            default: null
-        }],
-        default:[null]
+    approved_request: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
         },
-    iteration:{
-        type: Number,
-        default: 1
+      ],
+      default: [],
     },
-    current_activity:{
-        type:String
-    }
+    blocked_request: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      default: [],
+    },
+    activity_order: {
+      type: [
+        {
+          type: String,
+          default: null,
+        },
+      ],
+      default: [null],
+    },
+    iteration: {
+      type: Number,
+      default: 1,
+    },
+    current_activity: {
+      type: String,
+    },
+    selected_questions: {
+      type: [
+        {
+          iteration: {
+            type: Number,
+          },
+          questions: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Question",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  { timestamps: true },
+);
 
-},{timestamps: true})
-
-const Session = mongoose.model('Session', sessionSchema);
-export default Session
+const Session = mongoose.model("Session", sessionSchema);
+export default Session;
