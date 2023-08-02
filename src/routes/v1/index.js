@@ -15,6 +15,16 @@ import {
 import inviteTeacher from "../../invite/sendInvite.js";
 import acceptInvite from "../../invite/acceptInvite.js";
 
+import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser, getByIDs } from "../../controller/user-controller.js";
+import inviteTeacher from "../../invite/sendInvite.js"
+import acceptInvite from "../../invite/acceptInvite.js"
+
+import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
+import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
+import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession, addQuestionToSession, getAllQuestionFromSession, addCurrsession, deleteAllQuestionFromSession} from "../../controller/session-controller.js"
+import { addPriorityByPeer, createQuestion, getQuestionUserIterationn, getQuestionsByUserId } from "../../controller/question-controller.js";
+
+
 import {
   addUserSubject,
   createSubject,
@@ -93,10 +103,15 @@ router.post("/session/addQuestion", addQuestionToSession);
 router.get("/session/getsessionquestion", getAllQuestionFromSession);
 router.get("/session/questios/delete", deleteAllQuestionFromSession);
 
+
 //Question routes
 router.post("/question/create", createQuestion);
 router.post("/question/priorityByPeer", addPriorityByPeer);
 router.post("/question/get", getQuestions);
 router.get("/question/usrId", getQuestionsByUserId);
+router.post('/question/create', createQuestion)
+router.post('/question/priorityByPeer', addPriorityByPeer)
+router.get('/question/usrId', getQuestionsByUserId);
+router.get('/question/usrId', getQuestionUserIterationn);
 
 export default router;

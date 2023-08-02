@@ -33,6 +33,7 @@ export const createQuestion = async (req, res) => {
   }
 };
 
+
 export const getAllQuestion = async (req, res) => {
   try {
     const response = questionRepo.getAll({
@@ -56,6 +57,25 @@ export const getAllQuestion = async (req, res) => {
     });
   }
 };
+
+export const getQuestionUserIterationn = async(req, res)=> {
+    try {
+        const { userId, sessionIteration } = req.query;
+    
+        // Get the user's questions based on the provided userId and sessionIteration
+        // You can use the Mongoose query to find the questions that match the conditions.
+        const questions = await Question.find({
+          raisedBy: userId,
+          iteration: sessionIteration,
+        });
+    
+        res.status(200).json(questions);
+      } catch (error) {
+        console.error('Error fetching user questions:', error);
+        res.status(500).json({ error: 'Failed to fetch user questions.' });
+      }
+}
+
 
 export const getQuestionsByUserId = async (req, res) => {
   try {
