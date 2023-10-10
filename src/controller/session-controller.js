@@ -8,15 +8,17 @@ const sessionRepo = new sessionRepository();
 export const createSession = async (req, res) => {
   try {
     const existingSubject = await Subject.findById(req.body.subject);
+    console.log(req);
 
     if (!existingSubject) {
       return res.status(404).json({ error: "Subject not found" });
     }
-
+    console.log("Hello1")
     const response = await sessionRepo.create({
       title: req.body.title,
       description: req.body.description,
       parentModule: req.body.parentModule,
+      parentTopic: req.body.parentTopic,
       conductedBy: req.body.conductedBy,
       enrollmentLimit: req.body.enrollmentLimit,
       activity_order: req.body.activity_order,
@@ -26,7 +28,7 @@ export const createSession = async (req, res) => {
       parentModule: req.body.parentModule,
       subject: req.body.subject,
     });
-
+    console.log("Hello 2")
     return res.status(200).json({
       success: true,
       message: "Successfully created new session",

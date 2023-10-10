@@ -9,6 +9,10 @@ export const createSubject = async (req, res) => {
     const subject = await subjectRepo.create({
       name: req.body.name,
       description: req.body.description,
+      year: req.body.year,
+      semester: req.body.semester,
+      taughtBy: req.body.taughtBy,
+      division: req.body.division,
       createdBy: req.body.createdBy,
     });
 
@@ -72,6 +76,23 @@ export const getAllSubject = async (req, res) => {
   }
 };
 
+export const getSubjectBySem = async (req, res) => {
+  const { semester } = req.body;
+
+  try {
+    const subjects = await subjectRepo.findBySem(semester);
+    console.log(subjects);
+
+    return res.status(200).json({
+      message: "Subjects By Semester Retrived Successfully", data: subjects
+    })
+  }catch(error) {
+    return res.status(500).json({
+      message: "Subject By semester controller error", err: error
+    })
+  }
+}
+
 export const addUserSubject = async (req, res) => {
   const { userId, subjectIds } = req.body;
 
@@ -90,7 +111,7 @@ export const addUserSubject = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: "Subjects added successfully" });
+    res.status(200).json({ message: "Subjects added successfully", data: user });
     console.log("subject added");
   } catch (error) {
     console.error(error);
@@ -101,7 +122,7 @@ export const addUserSubject = async (req, res) => {
 export const getSubjectByID = async (req, res) => {
   try {
     const _id = req.body._id;
-    console.log(_id);
+    console.log("id: " + _id);
     const subject = await subjectRepo.findByID(_id);
     if (subject == null) {
       res
@@ -150,15 +171,23 @@ export const userSubject = async (req, res) => {
 
 export const subjectUpdate = async (req, res) => {
   const subject = await subjectRepo.findByID(req.body._id);
+  console.log(req.body);
+  console.log("-------------------------------------");
+  console.log(subject);
+  console.log("-------------------------------------");
   console.log(req.body._id);
+  console.log("-------------------------------------");
   if (req.body.name != null) {
     subject.name = req.body.name;
   }
   if (req.body.description != null) {
     subject.description = req.body.description;
   }
+  console.log(subject)
   try {
+    console.log("Hello===================")
     const newsub = await subject.save();
+    console.log("After=========================");
     return res.status(200).json({
       message: "Succesfully updated subject",
       data: newsub,

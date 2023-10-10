@@ -28,6 +28,10 @@ const sessionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    parentTopic: {
+      type: String,
+      required: true,
+    },
 
     subject: {
       type: mongoose.Schema.Types.ObjectId,

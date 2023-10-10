@@ -26,6 +26,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false, //CHANGED --> used to be true
     },
+    year: {
+      type: String,
+      required: false
+    },
+    semester: {
+      type: String,
+      required: false
+    },
+    division: {
+      type: String,
+      required: false
+    },
     password: {
       type: String,
       required: false,

@@ -15,6 +15,8 @@ export const userSignup = async (req, res) => {
       enrollmentNumber: req.body.enrollment,
       rollNumber: req.body.rollNumber,
       password: req.body.password,
+      year: req.body.year,
+      semester: req.body.semester,
       status: "active",
       type: req.body.type, //all accounts are student if through signup page
     });
@@ -199,8 +201,11 @@ export const get = async (req, res) => {
 export const getByID = async (req, res) => {
   try {
     const { _id } = req.body;
+    
     const user = await userRepo.findByID(_id);
-
+    console.log("--------------------------------------");
+    console.log(user);
+    console.log("--------------------------------------");
     return res.status(200).json({
       success: true,
       message: "User retrived successfully",
