@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  associateTeacher,
   userLogin,
   userSignup,
   updateInfo,
@@ -11,6 +12,7 @@ import {
   addTeacherToStudent,
   addQuestionToUser,
   getByIDs,
+  handleRequest
 } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js";
 import acceptInvite from "../../invite/acceptInvite.js";
@@ -78,13 +80,16 @@ router.post("/user/addcurrsession", addCurrsession); // adding current session
 router.post("/user/update", updateInfo); // update information
 router.get("/user/getSession", getUserSession);
 router.post("/user/addTeacher", addTeacherToStudent); //array of teachers allowed that student to enter
-router.post("/user/addquestion", addQuestionToUser); //array of question a student asked
+router.post("/user/addquestion", addQuestionToUser); //array of question a student asked //array of question a student asked
 
 //Data Query ROUTES
 router.get("/user/get", get); // get a user
 router.get("/user/getall", getAlluser); // for getting all the users
 router.post("/user/getID", getByID);
 router.post("/user/getIDs", getByIDs);
+
+// Request Transactions
+router.post("/user/request", handleRequest);
 
 //Registration ROUTES
 router.post("/user/signup", userSignup); //student sign up

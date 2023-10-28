@@ -183,6 +183,9 @@ export const subjectUpdate = async (req, res) => {
   if (req.body.description != null) {
     subject.description = req.body.description;
   }
+  if (req.body.taughtBy != null) {
+    subject.taughtBy = req.body.taughtBy;
+  }
   console.log(subject)
   try {
     console.log("Hello===================")

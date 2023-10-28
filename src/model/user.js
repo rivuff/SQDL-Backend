@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "teacher", "admin"],
       default: "student",
     },
+    requests: {
+      type: Array,
+      required: false,
+    },
     subjects: {
       type: [
         {
