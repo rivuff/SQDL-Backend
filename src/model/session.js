@@ -14,7 +14,7 @@ const sessionSchema = new mongoose.Schema(
     // topic:{
     //     type: String,
     // },
-    startTime: {
+    startDateTime: {
       type: Date,
     },
     conductedBy: {
@@ -32,7 +32,10 @@ const sessionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    sessionCode: {
+      type: String,
+      required: true,
+    },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subject", // Reference the "Subject" model from the "subject" database

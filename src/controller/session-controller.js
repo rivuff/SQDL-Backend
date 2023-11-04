@@ -19,8 +19,10 @@ export const createSession = async (req, res) => {
       description: req.body.description,
       parentModule: req.body.parentModule,
       parentTopic: req.body.parentTopic,
+      startDateTime: req.body.startDateTime,
       conductedBy: req.body.conductedBy,
       enrollmentLimit: req.body.enrollmentLimit,
+      sessionCode: req.body.sessionCode,
       activity_order: req.body.activity_order,
       topic: req.body.topic,
       startTime: req.body.startTime, // Corrected field assignment

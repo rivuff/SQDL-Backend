@@ -117,13 +117,14 @@ export const updateTopic = async (req, res) => {
         topic.createdBy = req.body.createdBy;
     if (req.body.parentModule != null)
         topic.parentModule = req.body.parentModule;
-    req.body.sessions.map((ele) => {
-        topic.sessions.push(ele);
-    })
+    // req.body.sessions.map((ele) => {
+    //     topic.sessions.push(ele);
+    // })
 
     console.log(topic);
 
     try {
+        topic.sessions.push(req.body.session)
         const newTopic = await topic.save();
         return res.status(200).json({
             message: "Update done",
