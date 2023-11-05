@@ -128,6 +128,30 @@ export const getSession = async (req, res) => {
   }
 };
 
+export const getSessionByCode = async (req, res) => {
+  console.log("---------------fromgetSessionBycode--------------------");
+  console.log(req.body);
+  console.log("---------------fromgetSessionBycode--------------------");
+  try {
+    const response = await sessionRepo.getByCode(req.body.sessionCode);
+
+    return res.status(200).json({
+      success: true,
+      message: "Session retrived succcessfully",
+      data: response,
+      err: {},
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong in in Session controller",
+      data: {},
+      success: false,
+      err: error,
+    });
+  }
+};
+
 export const addUserSession = async (req, res) => {
   const { userId, sessionIds } = req.body;
 
@@ -249,6 +273,12 @@ export const editSession = async (req, res) => {
     }
     if (req.body.parentModule != null) {
       session.parentModule = req.body.parentModule;
+    }
+    if (req.body.parentTopic != null) {
+      session.parentTopic = req.body.parentTopic;
+    }
+    if (req.body.sessionCode != null) {
+      session.sessionCode = req.body.sessionCode;
     }
     if (req.body.enrollmentLimit != null) {
       session.enrollmentLimit = req.body.enrollmentLimit;

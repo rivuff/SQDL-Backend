@@ -55,6 +55,7 @@ import {
   getSessionsByModuleId,
   addUserSession,
   editSession,
+  getSessionByCode,
   addQuestionToSession,
   getAllQuestionFromSession,
   addCurrsession,
@@ -121,6 +122,7 @@ router.post("/topic/delete", deleteTopic);
 //session routes
 router.post("/session/create", createSession);
 router.post("/session/get", getSession);
+router.post("/session/getByCode", getSessionByCode);
 router.post("/session/getAllFromModuleID", getSessionsByModuleId);
 router.post("/session/add", addUserSession);
 router.post("/session/update", editSession);
