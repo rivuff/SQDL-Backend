@@ -143,6 +143,30 @@ export const updateTopic = async (req, res) => {
     }
 }
 
+export const getTopicByModuleId = async(req, res) => {
+    console.log("--------------------------------")
+    console.log(req.body);
+    try {
+        const _id = req.body.parentModule;
+
+        const response = await topicRepo.findByModuleId(_id);
+        return res.status(200).json({
+            message: "find topic by module id done",
+            data: response,
+            success: true,
+            err: {}
+        });
+    }catch(error) {
+        console.log(error);
+        return res.status(404).json({
+            message: "find topic by module id fail",
+            data: {},
+            success: false,
+            err: error,
+        })
+    }
+}
+
 export const deleteTopic = async (req, res) => {
     try {
         const title = req.body.title;

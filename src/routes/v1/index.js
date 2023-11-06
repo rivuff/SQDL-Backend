@@ -46,6 +46,7 @@ import {
   getAllTopic,
   findTopicById,
   findTopic,
+  getTopicByModuleId,
   updateTopic,
   deleteTopic
 } from "../../controller/topic-controller.js";
@@ -116,6 +117,7 @@ router.post("/topic/create", createTopic);
 router.get("/topic/getAll", getAllTopic);
 router.post("/topic/getById", findTopicById);
 router.post("/topic/findByTopic", findTopic);
+router.post("/topic/getByModuleId", getTopicByModuleId);
 router.post("/topic/update", updateTopic);
 router.post("/topic/delete", deleteTopic);
 
