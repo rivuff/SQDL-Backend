@@ -18,7 +18,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("User with id: " + socket.id + " has connected");
-  socketHandlers(socket);
+  socketHandlers(socket, io);
 });
 
 // const socket = io();
