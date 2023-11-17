@@ -313,6 +313,7 @@ export const editSession = async (req, res) => {
       err: {},
     });
   } catch (error) {
+    console.log("Session error is : ");
     console.log(error);
     return res.status(500).json({
       message: "Something went wrong with the sessions controller endpoint",
