@@ -45,8 +45,6 @@ class TopicRespository {
     async findByModuleId(_id) {
         try {
             const response = await Topic.find({ parentModule: _id});
-            console.log("-----------------------jflsdajflksdajlkfj------------")
-            console.log(response);
             return response;
         } catch(error) {
             console.log("Something went wrong in respository layer");

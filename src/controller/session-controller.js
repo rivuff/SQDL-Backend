@@ -3,7 +3,9 @@ import User from "../model/user.js";
 import Session from "../model/session.js";
 import Subject from "../model/subject.js";
 import Question from "../model/question.js";
+
 const sessionRepo = new sessionRepository();
+
 
 export const createSession = async (req, res) => {
   try {
@@ -13,7 +15,7 @@ export const createSession = async (req, res) => {
     if (!existingSubject) {
       return res.status(404).json({ error: "Subject not found" });
     }
-    console.log("Hello1")
+    console.log("Hello1");
     const response = await sessionRepo.create({
       title: req.body.title,
       description: req.body.description,
@@ -30,7 +32,7 @@ export const createSession = async (req, res) => {
       parentModule: req.body.parentModule,
       subject: req.body.subject,
     });
-    console.log("Hello 2")
+    console.log("Hello 2");
     return res.status(200).json({
       success: true,
       message: "Successfully created new session",
@@ -54,7 +56,7 @@ export const addCurrsession = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       userId,
       { currSession: sessionId },
-      { new: true },
+      { new: true }
     );
 
     if (!user) {
@@ -180,13 +182,13 @@ export const addQuestionToSession = async (req, res) => {
 
     const session = await Session.findById(sessionId);
     if (!session) {
-      return res.status(200).json({ error: "session not found" });
+      return res.status(404).json({ error: "session not found" });
     }
 
     const question = await Question.findById(questionId);
 
-    if (!session) {
-      return res.status(200).json({ error: "question not found" });
+    if (!question) {
+      return res.status(404).json({ error: "question not found" });
     }
 
     session.questions.push(question);
@@ -197,7 +199,7 @@ export const addQuestionToSession = async (req, res) => {
     console.log("Question added");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Controller error" });
+    res.status(500).json({ error: "Session Controller error" });
   }
 };
 
@@ -328,73 +330,174 @@ export const editSession = async (req, res) => {
 
 // Function to distribute questions among students for a given session.
 
-async function distributeQuestions(req, res) {
-  const sessionId = req.sessionId;
-  const z = req.priority;
+// export const distributeQuestions = async(req, res) => {
+//   const sessionId = req.body.sessionId;
+//   const z = req.body.priority;
+
+//   try {
+//     // const session = await Session.findById(sessionId).populate("questions");
+//     const session = await Session.findById(sessionId);
+//     console.log("Sesssion: " + session);
+//     if (!session) {
+//       throw new Error("Session not found.");
+//     }
+
+//     const students = await User.find({ type: "student" });
+//     const sessionStudents = students.filter(stu => {
+//       if (session.approved_request.includes(stu._id)) {
+//         return stu;
+//       }
+//     })
+//     console.log("Session Students: ", sessionStudents);
+//     if (sessionStudents.length === 0) {
+//       throw new Error("No students found for the session.");
+//     }
+
+//     const totalQuestions = session.questions.length;
+//     const totalStudents = session.approved_request.length;
+//     let questionsPerStudent = Math.floor(
+//       (totalQuestions * z) / (totalStudents),
+//     );
+
+//     if (questionsPerStudent > 1) {
+//       questionsPerStudent--;
+//     }
+
+//     // Prepare the questions array with each question repeated z times.
+//     let questionsRepeated = [];
+//     for (const question of session.questions) {
+//       for (let i = 0; i < z; i++) {
+//         questionsRepeated.push(question);
+//       }
+//     }
+
+//     // Shuffle the questions randomly to ensure fairness in distribution.
+//     const shuffledQuestions = questionsRepeated.sort(() => Math.random() - 0.5);
+
+//     let startIndex = 0;
+//     var ctr=0;
+
+//     for (const student of sessionStudents) {
+//       let numQuestionsToAssign = questionsPerStudent;
+//       // const remainingQuestions = (totalQuestions % (totalStudents * z)) - ctr;
+
+//       // If there are remaining questions, distribute them among students starting from the beginning.
+//       // if (remainingQuestions > 0) {
+//       //   numQuestionsToAssign++;
+//       //   ctr++;
+//       // }
+
+//       // Distribute the questions to the student, skipping their own questions.
+//       const assignedQuestions = shuffledQuestions
+//         .slice(startIndex, startIndex + numQuestionsToAssign)
+//         .filter(
+//           // (question) => question.raisedBy.toString() !== student._id.toString(),
+//           (question) => question.raisedBy !== student._id,
+//         );
+
+//       // Update the student's questions field.
+//       student.questions = assignedQuestions.map((question) => question._id);
+//       await student.save();
+
+//       startIndex += numQuestionsToAssign;
+//     }
+
+//     // Save the updated session.
+//     await session.save();
+
+//     console.log("Questions distributed successfully.");
+
+//     res.status(200).json({
+//       message: "Question distributed successfully",
+//       studentsupdate: sessionStudents,
+//       sessionupdate: session,
+//     });
+//   } catch (error) {
+//     console.error("Error distributing and rating questions:", error.message);
+//   }
+// }
+
+export const distributeQuestions = async (req, res) => {
+  const { sessionId, priority:z } = req.body;
 
   try {
-    const session = await Session.findById(sessionId).populate("questions");
+    const session = await Session.findById(sessionId)
+    await session.populate('questions');
+    console.log("Sesssion: " + session);
     if (!session) {
       throw new Error("Session not found.");
     }
 
     const students = await User.find({ type: "student" });
-    if (students.length === 0) {
+    const sessionStudents = students.filter((stu) => {
+      if (session.approved_request.includes(stu._id)) {
+        return stu;
+      }
+    });
+    console.log("Session Students: ", sessionStudents, sessionStudents.length);
+    if (sessionStudents.length === 0) {
       throw new Error("No students found for the session.");
     }
 
     const totalQuestions = session.questions.length;
-    const totalStudents = students.length;
-    const questionsPerStudent = Math.floor(
-      (totalQuestions * z) / (totalStudents * z),
-    );
-    const remainingQuestions = totalQuestions % (totalStudents * z);
+    const totalStudents = session.approved_request.length;
+    let questionsPerStudent = Math.floor((totalQuestions * z) / totalStudents);
+    let totalQuestionsToAnswer = [...session.questions];
+    const shuffledQuestions = totalQuestionsToAnswer.sort(() => Math.random() - 0.5);
 
-    // Prepare the questions array with each question repeated z times.
-    const questionsRepeated = [];
-    for (const question of session.questions) {
-      for (let i = 0; i < z; i++) {
-        questionsRepeated.push(question);
+    console.log("totalQuestions: ", totalQuestions);
+    console.log("totalStudents: ", totalStudents);
+    console.log("questionsPerStudent: ", questionsPerStudent);
+    console.log("Total Questions To answer: ", shuffledQuestions.length);
+
+    for (const student of sessionStudents) {
+      let questionsForStudent = [];
+      console.log(student);
+      const questionStudentCanAnswer = shuffledQuestions.filter(ques => {
+        if ((ques.raisedBy.toString() !== student._id.toString()) && (ques.counter < z)) {
+          return ques;
+        }
+      })
+
+      console.log("Student Can answer: ", questionStudentCanAnswer.length);
+
+      if (questionStudentCanAnswer.length < questionsPerStudent) {
+        questionStudentCanAnswer.map(ques => {
+          if ((ques.counter < z) && (questionsForStudent.indexOf(ques) == -1)) {
+            ques.counter += 1;
+            questionsForStudent.push(ques)
+          }
+        })
+      } else {
+        while(questionsForStudent.length !== questionsPerStudent) {
+          const question = questionStudentCanAnswer[Math.floor(Math.random() * questionStudentCanAnswer.length)]
+          if ((question.counter < z) && (questionsForStudent.indexOf(question) == -1)) {
+            question.counter += 1;
+            questionsForStudent.push(question)
+          }
+        }
       }
-    }
+      
+      console.log(`Number Question Assigned for Student ${student.name} are: `, questionsForStudent.length);
+      console.log(`------------------Question Assigned to ${student.name} are:- --------------------` )
+      questionsForStudent.map((ques) => console.log(`Question: ${ques.questionText} ${ques.counter}`))
+      console.log("----------------------------------------------------------------------")
 
-    // Shuffle the questions randomly to ensure fairness in distribution.
-    const shuffledQuestions = questionsRepeated.sort(() => Math.random() - 0.5);
-
-    let startIndex = 0;
-
-    for (const student of students) {
-      let numQuestionsToAssign = questionsPerStudent;
-
-      // If there are remaining questions, distribute them among students starting from the beginning.
-      if (remainingQuestions > 0) {
-        numQuestionsToAssign++;
-        remainingQuestions--;
-      }
-
-      // Distribute the questions to the student, skipping their own questions.
-      const assignedQuestions = shuffledQuestions
-        .slice(startIndex, startIndex + numQuestionsToAssign)
-        .filter(
-          (question) => question.raisedBy.toString() !== student._id.toString(),
-        );
-
-      // Update the student's questions field.
-      student.questions = assignedQuestions.map((question) => question._id);
+      student.questions = questionsForStudent.map(ques => ques._id)
       await student.save();
-
-      startIndex += numQuestionsToAssign;
     }
 
-    // Save the updated session.
     await session.save();
 
     console.log("Questions distributed successfully.");
 
     res.status(200).json({
       message: "Question distributed successfully",
+      studentUpdate: sessionStudents,
+      sessionupdate: session,
     });
+
   } catch (error) {
-    console.error("Error distributing and rating questions:", error.message);
+    console.error("Error distributing and rating questions:", error);
   }
-}
+};

@@ -398,7 +398,7 @@ export const addQuestionToUser = async (req, res) => {
     user.questions.push(question);
     await user.save();
 
-    res.status(200).json({ message: "Question added successfully" });
+    res.status(200).json({ message: "Question added successfully", data: user });
     console.log("Question added to user");
   } catch (error) {
     console.error(error);

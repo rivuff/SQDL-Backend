@@ -61,12 +61,15 @@ import {
   getAllQuestionFromSession,
   addCurrsession,
   deleteAllQuestionFromSession,
+  distributeQuestions,
 } from "../../controller/session-controller.js";
 import {
   addPriorityByPeer,
   createQuestion,
   getQuestionsByUserId,
   getQuestions,
+  getQuestionById,
+  updateQuestion
 } from "../../controller/question-controller.js";
 
 const router = express.Router();
@@ -130,14 +133,18 @@ router.post("/session/add", addUserSession);
 router.post("/session/update", editSession);
 router.post("/session/addQuestion", addQuestionToSession);
 router.get("/session/getsessionquestion", getAllQuestionFromSession);
+router.post("/session/distributedQuestions", distributeQuestions);
 router.get("/session/questios/delete", deleteAllQuestionFromSession);
+
 
 
 //Question routes
 router.post("/question/create", createQuestion);
 router.post("/question/priorityByPeer", addPriorityByPeer);
 router.post("/question/get", getQuestions);
+router.post("/question/getById", getQuestionById);
 router.get("/question/usrId", getQuestionsByUserId);
+router.post("/question/update", updateQuestion);
 router.post('/question/create', createQuestion)
 router.post('/question/priorityByPeer', addPriorityByPeer)
 router.get('/question/usrId', getQuestionsByUserId);
