@@ -28,6 +28,7 @@ export const createSession = async (req, res) => {
       activity_order: req.body.activity_order,
       topic: req.body.topic,
       startTime: req.body.startTime, // Corrected field assignment
+      endDateTime: null,
       createdBy: req.body.createdBy,
       parentModule: req.body.parentModule,
       subject: req.body.subject,
@@ -300,12 +301,16 @@ export const editSession = async (req, res) => {
     if (req.body.iteration != null) {
       session.iteration = req.body.iteration;
     }
+    if (req.body.endDateTime != null) {
+      session.endDateTime = req.body.endDateTime;
+    }
     if (req.body.current_activity != null) {
       session.current_activity = req.body.current_activity;
     }
     if (req.body.selected_questions != null) {
       session.selected_questions = req.body.selected_questions;
     }
+    console.log("After change: ", session);
     const updatedSession = await session.save();
     console.log("W00000", updatedSession);
     return res.status(200).json({
@@ -418,7 +423,8 @@ export const editSession = async (req, res) => {
 // }
 
 export const distributeQuestions = async (req, res) => {
-  const { sessionId, priority:z } = req.body;
+  const { sessionId, priority:z, iteration } = req.body;
+  console.log("Given Data: ", sessionId, z, iteration);
 
   try {
     const session = await Session.findById(sessionId)
@@ -439,15 +445,16 @@ export const distributeQuestions = async (req, res) => {
       throw new Error("No students found for the session.");
     }
 
-    const totalQuestions = session.questions.length;
+    const totalQuestions = session.questions.filter(ques => ques.iteration === session.iteration).length;
     const totalStudents = session.approved_request.length;
     let questionsPerStudent = Math.floor((totalQuestions * z) / totalStudents);
-    let totalQuestionsToAnswer = [...session.questions];
+    let totalQuestionsToAnswer = [...session.questions.filter(ques => ques.iteration === iteration)];
     const shuffledQuestions = totalQuestionsToAnswer.sort(() => Math.random() - 0.5);
 
     console.log("totalQuestions: ", totalQuestions);
     console.log("totalStudents: ", totalStudents);
     console.log("questionsPerStudent: ", questionsPerStudent);
+    console.log(shuffledQuestions);
     console.log("Total Questions To answer: ", shuffledQuestions.length);
 
     for (const student of sessionStudents) {
@@ -478,6 +485,14 @@ export const distributeQuestions = async (req, res) => {
         }
       }
       
+      
+      while (questionsForStudent.length < questionsPerStudent) {
+        const question = questionStudentCanAnswer[Math.floor(Math.random() * questionStudentCanAnswer.length)];
+        if (questionsForStudent.indexOf(question) == -1) {
+          question.counter += 1;
+          questionsForStudent.push(question);
+        }
+      }
       console.log(`Number Question Assigned for Student ${student.name} are: `, questionsForStudent.length);
       console.log(`------------------Question Assigned to ${student.name} are:- --------------------` )
       questionsForStudent.map((ques) => console.log(`Question: ${ques.questionText} ${ques.counter}`))

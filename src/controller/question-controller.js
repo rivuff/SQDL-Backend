@@ -81,8 +81,8 @@ export const getQuestionUserIterationn = async(req, res)=> {
 export const getQuestionById = async (req, res) => {
   try{
     const {_id} = req.body;
-    console.log("From getQuestionById: ", _id)
     const question = await Question.find({_id: _id});
+    console.log(question);
     res.status(200).json({message: "Question found successfully", data: question});
   } catch(error) {
     res.status(500).json({error: 'Question controller error'})

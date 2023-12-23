@@ -17,6 +17,9 @@ const sessionSchema = new mongoose.Schema(
     startDateTime: {
       type: Date,
     },
+    endDateTime: {
+      type: Date,
+    },
     conductedBy: {
       type: String,
     },
