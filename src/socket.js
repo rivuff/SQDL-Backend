@@ -58,8 +58,10 @@ function socketHandlers(socket, io) {
       socket.broadcast.emit(eventName, arg)
     } else if (eventName.includes("UpdateQuestions")) {
       socket.broadcast.emit(eventName, arg)
-    } else if (eventName.includes("EndActivity")) {
+    } else if (eventName.includes("EndActivity-Student")) {
       socket.broadcast.emit(eventName, arg)
+    } else if (eventName.includes("ratingChange")) {
+      socket.broadcast.emit(eventName, arg);
     }
   });
 }

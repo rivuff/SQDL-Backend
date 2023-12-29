@@ -89,6 +89,9 @@ const sessionSchema = new mongoose.Schema(
       ],
       default: [null],
     },
+    rating: {
+      type: Array,
+    },
     iteration: {
       type: Number,
       default: 1,

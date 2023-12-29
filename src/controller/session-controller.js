@@ -301,6 +301,13 @@ export const editSession = async (req, res) => {
     if (req.body.iteration != null) {
       session.iteration = req.body.iteration;
     }
+    if (req.body.rating != null) {
+      if (session.rating === undefined) {
+        session.rating = [req.body.rating]
+      } else {
+        session.rating = [...session.rating, req.body.rating];
+      }
+    }
     if (req.body.endDateTime != null) {
       session.endDateTime = req.body.endDateTime;
     }
@@ -435,6 +442,7 @@ export const distributeQuestions = async (req, res) => {
     }
 
     const students = await User.find({ type: "student" });
+    // getting the students for a particular session
     const sessionStudents = students.filter((stu) => {
       if (session.approved_request.includes(stu._id)) {
         return stu;
@@ -445,10 +453,18 @@ export const distributeQuestions = async (req, res) => {
       throw new Error("No students found for the session.");
     }
 
+    // total question based on iteration of the session
     const totalQuestions = session.questions.filter(ques => ques.iteration === session.iteration).length;
+    // only those student are considered who are approved, those student are not considered which has 
+    // requested or blocked
     const totalStudents = session.approved_request.length;
+    // this value indicated how many question a student can answer
+    // Eg: totalQuestions = 10
+    // totalStudents = 5 and z = 2
+    // therefore each student can answer (10*2)/5 = 4
     let questionsPerStudent = Math.floor((totalQuestions * z) / totalStudents);
     let totalQuestionsToAnswer = [...session.questions.filter(ques => ques.iteration === iteration)];
+    // Shuffle the questions randomly to ensure fairness in distribution.
     const shuffledQuestions = totalQuestionsToAnswer.sort(() => Math.random() - 0.5);
 
     console.log("totalQuestions: ", totalQuestions);
@@ -458,8 +474,12 @@ export const distributeQuestions = async (req, res) => {
     console.log("Total Questions To answer: ", shuffledQuestions.length);
 
     for (const student of sessionStudents) {
+      // this variable contains the question that the student will be answering
       let questionsForStudent = [];
       console.log(student);
+      // removing those question which are posed by the user himself, which should not be included
+      // this also takes into account the z which ques.counter variable
+      // this will all the possible question student from which some question will be assigned to the student
       const questionStudentCanAnswer = shuffledQuestions.filter(ques => {
         if ((ques.raisedBy.toString() !== student._id.toString()) && (ques.counter < z)) {
           return ques;
@@ -468,26 +488,27 @@ export const distributeQuestions = async (req, res) => {
 
       console.log("Student Can answer: ", questionStudentCanAnswer.length);
 
-      if (questionStudentCanAnswer.length < questionsPerStudent) {
+      // 1st condition is if number of question for a particular student is less the number of question he can answer
+      if (questionsForStudent.length < questionsPerStudent) {
+        // each question for the question student can answer is check with 2 parameters
+        // 1. the question is assigned less than z times
+        // 2. question is not already pushed in the question for student list
         questionStudentCanAnswer.map(ques => {
           if ((ques.counter < z) && (questionsForStudent.indexOf(ques) == -1)) {
             ques.counter += 1;
             questionsForStudent.push(ques)
           }
         })
-      } else {
-        while(questionsForStudent.length !== questionsPerStudent) {
-          const question = questionStudentCanAnswer[Math.floor(Math.random() * questionStudentCanAnswer.length)]
-          if ((question.counter < z) && (questionsForStudent.indexOf(question) == -1)) {
-            question.counter += 1;
-            questionsForStudent.push(question)
-          }
-        }
       }
       
-      
+      // if still the student does not have the desiganated amount of question then we do not consider the z paramerter
+      // and assign question random but ensuring ques is not repeated
       while (questionsForStudent.length < questionsPerStudent) {
         const question = questionStudentCanAnswer[Math.floor(Math.random() * questionStudentCanAnswer.length)];
+        console.log("============================================")
+        console.log(questionStudentCanAnswer);
+        console.log(question)
+        console.log("============================================")
         if (questionsForStudent.indexOf(question) == -1) {
           question.counter += 1;
           questionsForStudent.push(question);
