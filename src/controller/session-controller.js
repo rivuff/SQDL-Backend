@@ -27,6 +27,8 @@ export const createSession = async (req, res) => {
       subject: req.body.subject,
     });
 
+    console.log(response);
+
     return res.status(200).json({
       success: true,
       message: "Successfully created new session",
@@ -62,6 +64,8 @@ export const addCurrsession = async (req, res) => {
     res.status(200).json({
       message: "successfully added current session",
     });
+
+    
   } catch (error) {
     console.log(error);
     return res.status(500).json({

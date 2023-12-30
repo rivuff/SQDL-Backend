@@ -15,14 +15,14 @@ import {
 import inviteTeacher from "../../invite/sendInvite.js";
 import acceptInvite from "../../invite/acceptInvite.js";
 
-import { userLogin,userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser, getByIDs } from "../../controller/user-controller.js";
-import inviteTeacher from "../../invite/sendInvite.js"
-import acceptInvite from "../../invite/acceptInvite.js"
+//import { userSignup,updateInfo,getAlluser, get, getByID, deleteUser, getUserSession, addTeacherToStudent, addQuestionToUser, getByIDs } from "../../controller/user-controller.js";
+//import inviteTeacher from "../../invite/sendInvite.js"
+//import acceptInvite from "../../invite/acceptInvite.js"
 
-import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
-import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
-import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession, addQuestionToSession, getAllQuestionFromSession, addCurrsession, deleteAllQuestionFromSession} from "../../controller/session-controller.js"
-import { addPriorityByPeer, createQuestion, getQuestionUserIterationn, getQuestionsByUserId } from "../../controller/question-controller.js";
+//import { addUserSubject, createSubject, getAllSubject, getSubjectByID } from "../../controller/subject-controller.js";
+//import { createModule, getModuleById, getModulesBySubjectId , moduleUpdate} from "../../controller/module-controller.js";
+//import {createSession, getSession, getSessionsByModuleId, addUserSession, editSession, addQuestionToSession, getAllQuestionFromSession, addCurrsession, deleteAllQuestionFromSession} from "../../controller/session-controller.js"
+//import { addPriorityByPeer, createQuestion, getQuestionUserIterationn, getQuestionsByUserId } from "../../controller/question-controller.js";
 
 
 import {
@@ -53,6 +53,7 @@ import {
   createQuestion,
   getQuestionsByUserId,
   getQuestions,
+  getQuestionUserIterationn
 } from "../../controller/question-controller.js";
 
 const router = express.Router();
@@ -88,7 +89,7 @@ router.post("/subject/getByID", getSubjectByID);
 router.post("/subject/addUserSubject", addUserSubject);
 
 //Module routes
-router.post("/module/create", createModule);
+router.post("/module/create", createModule);    
 router.post("/module/getAllFromSubjectID", getModulesBySubjectId);
 router.post("/module/getID", getModuleById);
 router.post("/module/update", moduleUpdate);
