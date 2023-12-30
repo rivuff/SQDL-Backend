@@ -13,6 +13,18 @@ const subjectSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    year: {
+      type: String,
+    },
+    semester: {
+      type: Number,
+    },
+    taughtBy: {
+      type: String,
+    },
+    division: {
+      type: String,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -22,7 +34,9 @@ const subjectSchema = new mongoose.Schema(
 );
 
 subjectSchema.pre("save", async function (next) {
+  console.log("------------------HELLOOOOO--------------")
   if (!this.subjectId) {
+    console.log("From If");
     // Generate the student ID if it doesn't exist
     this.subjectId = await generateUniqueSubjectId();
   }

@@ -39,6 +39,19 @@ class sessionRepository {
       throw error;
     }
   }
+
+  async getByCode(code) {
+    console.log("Code: " + code);
+    try {
+      const session = await Session.findOne({ sessionCode: code});
+      console.log("Session");
+      console.log(session);
+      return session;
+    } catch(error) {
+      console.log("Something went wrong in session repository layer");
+      throw error;
+    }
+  }
 }
 
 export default sessionRepository;

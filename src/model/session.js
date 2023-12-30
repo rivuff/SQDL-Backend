@@ -14,7 +14,10 @@ const sessionSchema = new mongoose.Schema(
     // topic:{
     //     type: String,
     // },
-    startTime: {
+    startDateTime: {
+      type: Date,
+    },
+    endDateTime: {
       type: Date,
     },
     conductedBy: {
@@ -28,7 +31,14 @@ const sessionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    parentTopic: {
+      type: String,
+      required: true,
+    },
+    sessionCode: {
+      type: String,
+      required: true,
+    },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subject", // Reference the "Subject" model from the "subject" database
@@ -78,6 +88,9 @@ const sessionSchema = new mongoose.Schema(
         },
       ],
       default: [null],
+    },
+    rating: {
+      type: Array,
     },
     iteration: {
       type: Number,

@@ -29,6 +29,17 @@ class SubjectRepository {
       throw error;
     }
   }
+
+  async findBySem(sem) {
+    try {
+      const response = await Subject.find({semester: sem})
+      console.log(response)
+      return response
+    } catch(error) {
+      console.log("Something went wrong while getting subject by Semester");
+      throw error;
+    }
+  }
 }
 
 export default SubjectRepository;

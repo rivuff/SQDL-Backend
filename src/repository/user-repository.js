@@ -14,6 +14,7 @@ class UserRepository {
   async findBy(email) {
     try {
       const response = await User.findOne({ email });
+      console.log(response);
       return response;
     } catch (error) {
       console.log("Something went wrong in repository layer");

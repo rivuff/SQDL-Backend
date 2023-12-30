@@ -26,6 +26,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false, //CHANGED --> used to be true
     },
+    year: {
+      type: String,
+      required: false
+    },
+    semester: {
+      type: String,
+      required: false
+    },
+    division: {
+      type: String,
+      required: false
+    },
     password: {
       type: String,
       required: false,
@@ -40,6 +52,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["student", "teacher", "admin"],
       default: "student",
+    },
+    requests: {
+      type: Array,
+      required: false,
     },
     subjects: {
       type: [

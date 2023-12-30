@@ -3,25 +3,32 @@ import User from "../model/user.js";
 import Session from "../model/session.js";
 import Subject from "../model/subject.js";
 import Question from "../model/question.js";
+
 const sessionRepo = new sessionRepository();
+
 
 export const createSession = async (req, res) => {
   try {
     const existingSubject = await Subject.findById(req.body.subject);
+    console.log(req);
 
     if (!existingSubject) {
       return res.status(404).json({ error: "Subject not found" });
     }
-
+    console.log("Hello1");
     const response = await sessionRepo.create({
       title: req.body.title,
       description: req.body.description,
       parentModule: req.body.parentModule,
+      parentTopic: req.body.parentTopic,
+      startDateTime: req.body.startDateTime,
       conductedBy: req.body.conductedBy,
       enrollmentLimit: req.body.enrollmentLimit,
+      sessionCode: req.body.sessionCode,
       activity_order: req.body.activity_order,
       topic: req.body.topic,
       startTime: req.body.startTime, // Corrected field assignment
+      endDateTime: null,
       createdBy: req.body.createdBy,
       parentModule: req.body.parentModule,
       subject: req.body.subject,
@@ -29,6 +36,8 @@ export const createSession = async (req, res) => {
 
     console.log(response);
 
+
+    console.log("Hello 2");
     return res.status(200).json({
       success: true,
       message: "Successfully created new session",
@@ -52,7 +61,7 @@ export const addCurrsession = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       userId,
       { currSession: sessionId },
-      { new: true },
+      { new: true }
     );
 
     if (!user) {
@@ -128,6 +137,30 @@ export const getSession = async (req, res) => {
   }
 };
 
+export const getSessionByCode = async (req, res) => {
+  console.log("---------------fromgetSessionBycode--------------------");
+  console.log(req.body);
+  console.log("---------------fromgetSessionBycode--------------------");
+  try {
+    const response = await sessionRepo.getByCode(req.body.sessionCode);
+
+    return res.status(200).json({
+      success: true,
+      message: "Session retrived succcessfully",
+      data: response,
+      err: {},
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong in in Session controller",
+      data: {},
+      success: false,
+      err: error,
+    });
+  }
+};
+
 export const addUserSession = async (req, res) => {
   const { userId, sessionIds } = req.body;
 
@@ -156,13 +189,13 @@ export const addQuestionToSession = async (req, res) => {
 
     const session = await Session.findById(sessionId);
     if (!session) {
-      return res.status(200).json({ error: "session not found" });
+      return res.status(404).json({ error: "session not found" });
     }
 
     const question = await Question.findById(questionId);
 
-    if (!session) {
-      return res.status(200).json({ error: "question not found" });
+    if (!question) {
+      return res.status(404).json({ error: "question not found" });
     }
 
     session.questions.push(question);
@@ -173,7 +206,7 @@ export const addQuestionToSession = async (req, res) => {
     console.log("Question added");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Controller error" });
+    res.status(500).json({ error: "Session Controller error" });
   }
 };
 
@@ -250,6 +283,12 @@ export const editSession = async (req, res) => {
     if (req.body.parentModule != null) {
       session.parentModule = req.body.parentModule;
     }
+    if (req.body.parentTopic != null) {
+      session.parentTopic = req.body.parentTopic;
+    }
+    if (req.body.sessionCode != null) {
+      session.sessionCode = req.body.sessionCode;
+    }
     if (req.body.enrollmentLimit != null) {
       session.enrollmentLimit = req.body.enrollmentLimit;
     }
@@ -268,12 +307,23 @@ export const editSession = async (req, res) => {
     if (req.body.iteration != null) {
       session.iteration = req.body.iteration;
     }
+    if (req.body.rating != null) {
+      if (session.rating === undefined) {
+        session.rating = [req.body.rating]
+      } else {
+        session.rating = [...session.rating, req.body.rating];
+      }
+    }
+    if (req.body.endDateTime != null) {
+      session.endDateTime = req.body.endDateTime;
+    }
     if (req.body.current_activity != null) {
       session.current_activity = req.body.current_activity;
     }
     if (req.body.selected_questions != null) {
       session.selected_questions = req.body.selected_questions;
     }
+    console.log("After change: ", session);
     const updatedSession = await session.save();
     console.log("W00000", updatedSession);
     return res.status(200).json({
@@ -283,6 +333,7 @@ export const editSession = async (req, res) => {
       err: {},
     });
   } catch (error) {
+    console.log("Session error is : ");
     console.log(error);
     return res.status(500).json({
       message: "Something went wrong with the sessions controller endpoint",
@@ -297,73 +348,198 @@ export const editSession = async (req, res) => {
 
 // Function to distribute questions among students for a given session.
 
-async function distributeQuestions(req, res) {
-  const sessionId = req.sessionId;
-  const z = req.priority;
+// export const distributeQuestions = async(req, res) => {
+//   const sessionId = req.body.sessionId;
+//   const z = req.body.priority;
+
+//   try {
+//     // const session = await Session.findById(sessionId).populate("questions");
+//     const session = await Session.findById(sessionId);
+//     console.log("Sesssion: " + session);
+//     if (!session) {
+//       throw new Error("Session not found.");
+//     }
+
+//     const students = await User.find({ type: "student" });
+//     const sessionStudents = students.filter(stu => {
+//       if (session.approved_request.includes(stu._id)) {
+//         return stu;
+//       }
+//     })
+//     console.log("Session Students: ", sessionStudents);
+//     if (sessionStudents.length === 0) {
+//       throw new Error("No students found for the session.");
+//     }
+
+//     const totalQuestions = session.questions.length;
+//     const totalStudents = session.approved_request.length;
+//     let questionsPerStudent = Math.floor(
+//       (totalQuestions * z) / (totalStudents),
+//     );
+
+//     if (questionsPerStudent > 1) {
+//       questionsPerStudent--;
+//     }
+
+//     // Prepare the questions array with each question repeated z times.
+//     let questionsRepeated = [];
+//     for (const question of session.questions) {
+//       for (let i = 0; i < z; i++) {
+//         questionsRepeated.push(question);
+//       }
+//     }
+
+//     // Shuffle the questions randomly to ensure fairness in distribution.
+//     const shuffledQuestions = questionsRepeated.sort(() => Math.random() - 0.5);
+
+//     let startIndex = 0;
+//     var ctr=0;
+
+//     for (const student of sessionStudents) {
+//       let numQuestionsToAssign = questionsPerStudent;
+//       // const remainingQuestions = (totalQuestions % (totalStudents * z)) - ctr;
+
+//       // If there are remaining questions, distribute them among students starting from the beginning.
+//       // if (remainingQuestions > 0) {
+//       //   numQuestionsToAssign++;
+//       //   ctr++;
+//       // }
+
+//       // Distribute the questions to the student, skipping their own questions.
+//       const assignedQuestions = shuffledQuestions
+//         .slice(startIndex, startIndex + numQuestionsToAssign)
+//         .filter(
+//           // (question) => question.raisedBy.toString() !== student._id.toString(),
+//           (question) => question.raisedBy !== student._id,
+//         );
+
+//       // Update the student's questions field.
+//       student.questions = assignedQuestions.map((question) => question._id);
+//       await student.save();
+
+//       startIndex += numQuestionsToAssign;
+//     }
+
+//     // Save the updated session.
+//     await session.save();
+
+//     console.log("Questions distributed successfully.");
+
+//     res.status(200).json({
+//       message: "Question distributed successfully",
+//       studentsupdate: sessionStudents,
+//       sessionupdate: session,
+//     });
+//   } catch (error) {
+//     console.error("Error distributing and rating questions:", error.message);
+//   }
+// }
+
+export const distributeQuestions = async (req, res) => {
+  const { sessionId, priority:z, iteration } = req.body;
+  console.log("Given Data: ", sessionId, z, iteration);
 
   try {
-    const session = await Session.findById(sessionId).populate("questions");
+    const session = await Session.findById(sessionId)
+    await session.populate('questions');
+    console.log("Sesssion: " + session);
     if (!session) {
       throw new Error("Session not found.");
     }
 
     const students = await User.find({ type: "student" });
-    if (students.length === 0) {
+    // getting the students for a particular session
+    const sessionStudents = students.filter((stu) => {
+      if (session.approved_request.includes(stu._id)) {
+        return stu;
+      }
+    });
+    console.log("Session Students: ", sessionStudents, sessionStudents.length);
+    if (sessionStudents.length === 0) {
       throw new Error("No students found for the session.");
     }
 
-    const totalQuestions = session.questions.length;
-    const totalStudents = students.length;
-    const questionsPerStudent = Math.floor(
-      (totalQuestions * z) / (totalStudents * z),
-    );
-    const remainingQuestions = totalQuestions % (totalStudents * z);
-
-    // Prepare the questions array with each question repeated z times.
-    const questionsRepeated = [];
-    for (const question of session.questions) {
-      for (let i = 0; i < z; i++) {
-        questionsRepeated.push(question);
-      }
-    }
-
+    // total question based on iteration of the session
+    const totalQuestions = session.questions.filter(ques => ques.iteration === session.iteration).length;
+    // only those student are considered who are approved, those student are not considered which has 
+    // requested or blocked
+    const totalStudents = session.approved_request.length;
+    // this value indicated how many question a student can answer
+    // Eg: totalQuestions = 10
+    // totalStudents = 5 and z = 2
+    // therefore each student can answer (10*2)/5 = 4
+    let questionsPerStudent = Math.floor((totalQuestions * z) / totalStudents);
+    let totalQuestionsToAnswer = [...session.questions.filter(ques => ques.iteration === iteration)];
     // Shuffle the questions randomly to ensure fairness in distribution.
-    const shuffledQuestions = questionsRepeated.sort(() => Math.random() - 0.5);
+    const shuffledQuestions = totalQuestionsToAnswer.sort(() => Math.random() - 0.5);
 
-    let startIndex = 0;
+    console.log("totalQuestions: ", totalQuestions);
+    console.log("totalStudents: ", totalStudents);
+    console.log("questionsPerStudent: ", questionsPerStudent);
+    console.log(shuffledQuestions);
+    console.log("Total Questions To answer: ", shuffledQuestions.length);
 
-    for (const student of students) {
-      let numQuestionsToAssign = questionsPerStudent;
+    for (const student of sessionStudents) {
+      // this variable contains the question that the student will be answering
+      let questionsForStudent = [];
+      console.log(student);
+      // removing those question which are posed by the user himself, which should not be included
+      // this also takes into account the z which ques.counter variable
+      // this will all the possible question student from which some question will be assigned to the student
+      const questionStudentCanAnswer = shuffledQuestions.filter(ques => {
+        if ((ques.raisedBy.toString() !== student._id.toString()) && (ques.counter < z)) {
+          return ques;
+        }
+      })
 
-      // If there are remaining questions, distribute them among students starting from the beginning.
-      if (remainingQuestions > 0) {
-        numQuestionsToAssign++;
-        remainingQuestions--;
+      console.log("Student Can answer: ", questionStudentCanAnswer.length);
+
+      // 1st condition is if number of question for a particular student is less the number of question he can answer
+      if (questionsForStudent.length < questionsPerStudent) {
+        // each question for the question student can answer is check with 2 parameters
+        // 1. the question is assigned less than z times
+        // 2. question is not already pushed in the question for student list
+        questionStudentCanAnswer.map(ques => {
+          if ((ques.counter < z) && (questionsForStudent.indexOf(ques) == -1)) {
+            ques.counter += 1;
+            questionsForStudent.push(ques)
+          }
+        })
       }
+      
+      // if still the student does not have the desiganated amount of question then we do not consider the z paramerter
+      // and assign question random but ensuring ques is not repeated
+      while (questionsForStudent.length < questionsPerStudent) {
+        const question = questionStudentCanAnswer[Math.floor(Math.random() * questionStudentCanAnswer.length)];
+        console.log("============================================")
+        console.log(questionStudentCanAnswer);
+        console.log(question)
+        console.log("============================================")
+        if (questionsForStudent.indexOf(question) == -1) {
+          question.counter += 1;
+          questionsForStudent.push(question);
+        }
+      }
+      console.log(`Number Question Assigned for Student ${student.name} are: `, questionsForStudent.length);
+      console.log(`------------------Question Assigned to ${student.name} are:- --------------------` )
+      questionsForStudent.map((ques) => console.log(`Question: ${ques.questionText} ${ques.counter}`))
+      console.log("----------------------------------------------------------------------")
 
-      // Distribute the questions to the student, skipping their own questions.
-      const assignedQuestions = shuffledQuestions
-        .slice(startIndex, startIndex + numQuestionsToAssign)
-        .filter(
-          (question) => question.raisedBy.toString() !== student._id.toString(),
-        );
-
-      // Update the student's questions field.
-      student.questions = assignedQuestions.map((question) => question._id);
+      student.questions = questionsForStudent.map(ques => ques._id)
       await student.save();
-
-      startIndex += numQuestionsToAssign;
     }
 
-    // Save the updated session.
     await session.save();
 
     console.log("Questions distributed successfully.");
 
     res.status(200).json({
       message: "Question distributed successfully",
+      studentUpdate: sessionStudents,
+      sessionupdate: session,
     });
+
   } catch (error) {
-    console.error("Error distributing and rating questions:", error.message);
+    console.error("Error distributing and rating questions:", error);
   }
-}
+};

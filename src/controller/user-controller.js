@@ -15,6 +15,8 @@ export const userSignup = async (req, res) => {
       enrollmentNumber: req.body.enrollment,
       rollNumber: req.body.rollNumber,
       password: req.body.password,
+      year: req.body.year,
+      semester: req.body.semester,
       status: "active",
       type: req.body.type, //all accounts are student if through signup page
     });
@@ -142,6 +144,45 @@ export const updateInfo = async (req, res) => {
   }
 };
 
+export const handleRequest = async (req, res) => {
+  console.log(req.body)
+  const request = req.body.request
+  try {
+    const user = await userRepo.findByID(request._id);
+    if (!user) {
+      return res.status(401).json({
+        message: "Teacher not found",
+        success: false
+      })
+    }
+    if (request.type === 'send') {
+      user.requests.push(request);
+      await user.save();
+      return res.status(200).json({message: "request send successfully", data: user});
+    } else if (request.type === 'accept') {
+      let newReqs
+      if (request.from === 'admin') {
+        newReqs = user.requests.filter(req => {
+          return req.subjectid !== request.subjectid;
+        })
+      } else if (request.from === 'student') {
+        newReqs = user.requests.filter(req => {
+          return req.subjectInfo._id === request.subjectInfo._id;
+        })
+      }
+      user.requests = newReqs;
+      await user.save();
+      return res.status(200).json({message: "request accepted", data: user})
+    }
+    
+    console.log("request sent");
+    return res.status(400).json({message: "type parameter missing", success: false});
+  } catch(error) {
+    console.log(error);
+    return res.status(404).json({message: "Some error occured while request transaction", data: error})
+  }
+}
+
 export const deleteUser = async (req, res) => {
   console.log(req.body.email);
   try {
@@ -173,6 +214,28 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+export const associateTeacher = async (req, res) => {
+  const { _id, subjectId } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: _id});
+    console.log(user);
+
+    if (!user) {
+      return res.status(200).json({error: "user not found"});
+    }
+
+    user.taughtBy = subjectId;
+    
+    await user.save()
+
+    return res.status(200).json({ message: "Teacher Associated Successfully", data: user})
+      
+  } catch(error) {
+    res.status(500).json({ error: "Associate Teacher Error"})
+  }
+}
+
 export const get = async (req, res) => {
   try {
     const { email } = req.query;
@@ -199,8 +262,12 @@ export const get = async (req, res) => {
 export const getByID = async (req, res) => {
   try {
     const { _id } = req.body;
+    
     const user = await userRepo.findByID(_id);
-
+    console.log("--------------------------------------");
+    console.log("Type of id: " + typeof(_id));
+    console.log(user);
+    console.log("--------------------------------------");
     return res.status(200).json({
       success: true,
       message: "User retrived successfully",
@@ -331,7 +398,7 @@ export const addQuestionToUser = async (req, res) => {
     user.questions.push(question);
     await user.save();
 
-    res.status(200).json({ message: "Question added successfully" });
+    res.status(200).json({ message: "Question added successfully", data: user });
     console.log("Question added to user");
   } catch (error) {
     console.error(error);

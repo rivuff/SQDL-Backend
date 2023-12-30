@@ -10,10 +10,12 @@ export const createQuestion = async (req, res) => {
       session: req.body.session,
       iterationIndex: req.body.iterationIndex,
       raisedBy: req.body.raisedBy,
+      raisedByName: req.body.raisedByName,
       priorityBySelf: req.body.priorityBySelf,
       iteration: req.body.iteration,
-      questionTag: req.body.questionType,
+      questionTag: req.body.questionTag,
       session: req.body.session,
+      counter: 0,
     });
 
     return res.status(200).json({
@@ -76,6 +78,17 @@ export const getQuestionUserIterationn = async(req, res)=> {
       }
 }
 
+export const getQuestionById = async (req, res) => {
+  try{
+    const {_id} = req.body;
+    const question = await Question.find({_id: _id});
+    console.log(question);
+    res.status(200).json({message: "Question found successfully", data: question});
+  } catch(error) {
+    res.status(500).json({error: 'Question controller error'})
+  }
+}
+
 
 export const getQuestionsByUserId = async (req, res) => {
   try {
@@ -86,6 +99,7 @@ export const getQuestionsByUserId = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 export const getQuestions = async (req, res) => {
   try {
     const session = req.body.session;
@@ -101,9 +115,71 @@ export const getQuestions = async (req, res) => {
   }
 };
 
+export const updateQuestion = async (req, res) => {
+  try {
+    const _id = req.body._id;
+    const question = await questionRepo.find(_id)
+    if (question === null) {
+      return res.status(404).json({
+        message: "Question not found",
+        data: null,
+        success: false,
+        err: "404 Question not found"
+      })
+    }
+    if (req.body.questionText != null) {
+      question.questionText = req.body.questionText;
+    }
+    if (req.body.questionTag != null) {
+      question.questionTag = req.body.questionTag;
+    }
+    if (req.body.session != null) {
+      question.session = req.body.session;
+    }
+    if (req.body.iterationIndex != null) {
+      question.iterationIndex = req.body.iterationIndex;
+    }
+    if (req.body.raisedBy != null) {
+      question.raisedBy = req.body.raisedBy;
+    }
+    if (req.body.priorityBySelf != null) {
+      question.priorityBySelf = req.body.priorityBySelf;
+    }
+    if (req.body.priorityByPeer != null) {
+      question.priorityByPeer = req.body.priorityByPeer;
+    }
+    if (req.body.priorityBySystem != null) {
+      question.priorityBySystem = req.body.priorityBySystem;
+    }
+    if (req.body.iteration != null) {
+      question.iteration = req.body.iteration;
+    }
+    if (req.body.pickedBySystem != null) {
+      question.pickedBySystem = req.body.pickedBySystem;
+    }
+    const updatedQuestion = await question.save();
+    console.log("updatedQuestion", updatedQuestion);
+    return res.status(200).json({
+      message: "Question updated",
+      data: updatedQuestion,
+      success: true,
+      err: {},
+    });
+  } catch(error) {
+    console.log("Question error is : ");
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong with the question controller endpoint",
+      data: null,
+      success: false,
+      err: error,
+    });
+  }
+}
+
 export const addPriorityByPeer = async (req, res) => {
   try {
-    const { rating, questionId } = req.body;
+    const { rating, questionId, studentId } = req.body;
     const question = await Question.findById(questionId);
     console.log(question);
     if (!question) {
@@ -113,6 +189,7 @@ export const addPriorityByPeer = async (req, res) => {
     const priorityByPeer = {
       // _id: prioritizedBy,
       // prioritizedBy: prioritizedBy,
+      prioritizedBy: studentId,
       priority: rating,
     };
 

@@ -27,6 +27,10 @@ const questionSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    raisedByName: {
+      type: String,
+      required: true
+    },
     priorityBySelf: {
       type: Number,
       enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -53,6 +57,10 @@ const questionSchema = new mongoose.Schema(
     iteration: {
       type: Number,
       default: 1,
+    },
+    counter: {
+      type: Number,
+      default: 0,
     },
     pickedBySystem: {
       type: Boolean,
