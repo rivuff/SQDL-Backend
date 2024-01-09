@@ -60,9 +60,10 @@ export const getAllQuestion = async (req, res) => {
   }
 };
 
-export const getQuestionUserIterationn = async(req, res)=> {
+export const getQuestionUserIteration = async(req, res)=> {
     try {
         const { userId, sessionIteration } = req.query;
+        console.log(userId, sessionIteration);
     
         // Get the user's questions based on the provided userId and sessionIteration
         // You can use the Mongoose query to find the questions that match the conditions.

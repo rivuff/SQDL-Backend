@@ -78,7 +78,7 @@ import {
   getQuestionsByUserId,
   getQuestions,
 
-  getQuestionUserIterationn,
+  getQuestionUserIteration,
   getQuestionById,
   updateQuestion
 
@@ -159,7 +159,7 @@ router.get("/question/usrId", getQuestionsByUserId);
 router.post("/question/update", updateQuestion);
 router.post('/question/create', createQuestion)
 router.post('/question/priorityByPeer', addPriorityByPeer)
-router.get('/question/usrId', getQuestionsByUserId);
+router.get('/question/userIteration', getQuestionUserIteration);
 // router.get('/question/usrId', getQuestionsByUserId);
 
 export default router;

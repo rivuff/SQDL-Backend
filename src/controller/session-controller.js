@@ -255,11 +255,12 @@ export const deleteAllQuestionFromSession = async (req, res) => {
 
 export const editSession = async (req, res) => {
   //checking submitted fields
-  console.log(req.body);
+  console.log("Into the session update function")
   try {
     const _id = req.body._id;
+    console.log("Getting session");
     const session = await sessionRepo.get(_id);
-    console.log(session);
+    console.log("Got Session")
     if (session == null) {
       return res.status(404).json({
         message: "Session does not exist",
@@ -323,7 +324,7 @@ export const editSession = async (req, res) => {
     if (req.body.selected_questions != null) {
       session.selected_questions = req.body.selected_questions;
     }
-    console.log("After change: ", session);
+    console.log("Server before session update")
     const updatedSession = await session.save();
     console.log("W00000", updatedSession);
     return res.status(200).json({
@@ -513,6 +514,7 @@ export const distributeQuestions = async (req, res) => {
         const question = questionStudentCanAnswer[Math.floor(Math.random() * questionStudentCanAnswer.length)];
         console.log("============================================")
         console.log(questionStudentCanAnswer);
+        console.log(questionsForStudent);
         console.log(question)
         console.log("============================================")
         if (questionsForStudent.indexOf(question) == -1) {
