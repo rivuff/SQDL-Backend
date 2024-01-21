@@ -52,7 +52,8 @@ function socketHandlers(socket, io) {
       console.log(eventName);
     } else if (eventName.includes("student")) {
       //types of action to students
-      socket.broadcast.emit(eventName, { fetch: true });
+      // socket.broadcast.emit(eventName, { fetch: true });
+      socket.broadcast.emit(eventName, arg);
       console.log(eventName);
     } else if (eventName.includes("session-mode")) {
       socket.broadcast.emit(eventName, arg)
