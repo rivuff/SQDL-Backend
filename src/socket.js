@@ -67,6 +67,8 @@ function socketHandlers(socket, io) {
       socket.broadcast.emit(eventName, arg)
     } else if (eventName.includes("PriorityQuestionChange")) {
       socket.broadcast.emit(eventName, arg);
+    } else if (eventName.includes("sendQuestionToStudent")) {
+      socket.broadcast.emit(eventName, arg);
     }
   });
 }
