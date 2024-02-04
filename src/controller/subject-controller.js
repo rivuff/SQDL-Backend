@@ -111,7 +111,7 @@ export const addUserSubject = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: "Subjects added successfully", data: user });
+    res.status(200).json({ message: "Subjects added successfully", data: user, subject: subjects });
     console.log("subject added");
   } catch (error) {
     console.error(error);
