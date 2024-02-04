@@ -5,6 +5,8 @@ import Session from "../model/session.js";
 import User from "../model/user.js";
 import Question from "../model/question.js";
 
+import { createObjectCsvWriter } from 'csv-writer';
+
 const userRepo = new UserRepository();
 
 export const userSignup = async (req, res) => {
@@ -403,5 +405,60 @@ export const addQuestionToUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Controller error" });
+  }
+};
+
+export const getCSV = async (req, res) => {
+  try {
+    console.log(req.query);
+    const { offset, limit } = req.query;
+    console.log(offset, limit);
+
+    let users = await userRepo.getAll(parseInt(offset), parseInt(limit));
+    users = [...(users.filter(user => user.type === "student"))]
+    console.log(users)
+    console.log(typeof(users));
+
+    const fields = [
+      { id: '_id', title: 'ID' },
+      { id: 'name', title: 'Name' },
+      { id: 'enrollmentNumber', title: 'EnrollmentNumber' },
+      { id: 'email', title: 'Email' },
+      { id: 'rollNumber', title: 'RollNumber' },
+      { id: 'year', title: 'Year'},
+      { id: 'semester', title: 'Semester'},
+      { id: 'Password', title: 'Password'},
+      { id: 'Status', title: 'Status'},
+      { id: 'type', title: 'Type'},
+      { id: 'requests', title: 'Requests'},
+      { id: 'subjects', title: 'Subjects'},
+      { id: 'sessions', title: 'Sessions'},
+      { id: 'allowedBy', title: 'AllowedBy'},
+      { id: 'questions', title: 'Questions'},
+      { id: 'createdAt', title: 'CreatedAt'},
+      { id: 'updatedAt', title: 'UpdatedAt'},
+      { id: 'studentId', title: 'StudentId'},
+    ];
+
+    const csvWriter = createObjectCsvWriter({
+      path: 'output.csv',
+      header: fields,
+    });
+
+    await csvWriter.writeRecords(users);
+
+    console.log("Write to output.csv successfully!")
+
+
+    res.download("output.csv")
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong in editing user information",
+      data: {},
+      success: false,
+      err: error,
+    });
   }
 };

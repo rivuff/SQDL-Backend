@@ -12,7 +12,8 @@ import {
   addTeacherToStudent,
   addQuestionToUser,
   getByIDs,
-  handleRequest
+  handleRequest,
+  getCSV,
 } from "../../controller/user-controller.js";
 import inviteTeacher from "../../invite/sendInvite.js";
 import acceptInvite from "../../invite/acceptInvite.js";
@@ -107,6 +108,9 @@ router.post("/user/getIDs", getByIDs);
 
 // Request Transactions
 router.post("/user/request", handleRequest);
+
+//Getting Student CSV Data
+router.get("/user/getCSV", getCSV);
 
 //Registration ROUTES
 router.post("/user/signup", userSignup); //student sign up
