@@ -90,6 +90,32 @@ export const getQuestionById = async (req, res) => {
   }
 }
 
+export const getQuestionByIDs = async (req, res) => {
+  try {
+    const _ids = req.body._ids;
+    const questions = [];
+    for (let i = 0; i < _ids.length; i++) {
+      const user = await questionRepo.find(_ids[i]);
+      // console.log(_ids[i])
+      questions.push(user);
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Questions retrived successfully",
+      data: questions,
+      err: {},
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong in querying user information",
+      data: {},
+      success: false,
+      err: error,
+    });
+  }
+};
+
 
 export const getQuestionsByUserId = async (req, res) => {
   try {

@@ -78,7 +78,7 @@ import {
   createQuestion,
   getQuestionsByUserId,
   getQuestions,
-
+  getQuestionByIDs,
   getQuestionUserIteration,
   getQuestionById,
   updateQuestion
@@ -159,6 +159,7 @@ router.post("/question/create", createQuestion);
 router.post("/question/priorityByPeer", addPriorityByPeer);
 router.post("/question/get", getQuestions);
 router.post("/question/getById", getQuestionById);
+router.post("/question/getByIds", getQuestionByIDs);
 router.get("/question/usrId", getQuestionsByUserId);
 router.post("/question/update", updateQuestion);
 router.post('/question/create', createQuestion)
