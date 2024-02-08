@@ -1,10 +1,17 @@
 import sessionRepository from "../repository/session-repository.js";
 import User from "../model/user.js";
+import UserRepository from "../repository/user-repository.js";
 import Session from "../model/session.js";
 import Subject from "../model/subject.js";
 import Question from "../model/question.js";
+import QuestionRepository from "../repository/question-repository.js";
+
+import { createObjectCsvWriter } from 'csv-writer';
 
 const sessionRepo = new sessionRepository();
+const userRepo = new UserRepository();
+const questionRepo = new QuestionRepository();
+
 
 
 export const createSession = async (req, res) => {
@@ -640,5 +647,84 @@ export const distributeQuestions = async(req, res) => {
 
   } catch (error) {
     console.log(error);
+  }
+}
+
+export const sessionCSV = async (req, res) => {
+  let students = [];
+  let questions = [];
+  let sessioninfo = null;
+  try {
+    const { _id } = req.body;
+    const session = await sessionRepo.get(_id);
+    console.log(session)
+
+    for (let i = 0; i < session.approved_request.length; i++) {
+      const user = await userRepo.findByID(session.approved_request[i]);
+      students.push(user.name);
+    }
+    console.log(students);
+    console.log(session.questions.length)
+
+    for (let i = 0; i < session.questions.length; i++) {
+      const question = await questionRepo.find(session.questions[i]);
+      questions.push(question.questionText);
+    }
+    console.log(questions);
+
+    sessioninfo = [
+      session._id, 
+      session.title,
+      session.description,
+      session.startDateTime,
+      session.endDateTime,
+      session.conductedBy,
+      session.sessionCode,
+      questions.length,
+      questions,
+      students.length,
+      students,
+      session.activity_order
+    ]
+
+    // const fields = [
+    //   {id: '_id', title: 'ID'},
+    //   {id: 'description', title: 'Description'},
+    //   {id: 'startDateTime', title: "Start Data and Time"},
+    //   {id: 'endDateTime', title: "End Date and Time"},
+    //   {id: 'conductedBy', title: 'Teacher for Session'},
+    //   {id: 'sessionCode', title: 'Session Code'},
+    //   {id: 'totalQuestions', title: 'Total Questions'},
+    //   {id: 'questions', title: 'Question Posed in Session'},
+    //   {id: 'totalStudents', title: 'Total Students'},
+    //   {id: 'approved_request', title: "Students in Session"},
+    //   {id: 'activity_order', title: 'Activity in Session'},
+    // ]
+
+    // const csvWriter = createObjectCsvWriter({
+    //   path: 'output.csv',
+    //   header: fields,
+    // });
+
+    // await csvWriter.writeRecords(session);
+
+    // console.log("Write to output.csv successfully!")
+
+
+    // res.download("output.csv")
+    return res.status(200).json({
+      message: "Data for CSV retrived successfully",
+      data: sessioninfo,
+      success: true,
+      err: false,
+    })
+    
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong while getting session CSV",
+      data: {},
+      success: false,
+      err: error,
+    });
   }
 }

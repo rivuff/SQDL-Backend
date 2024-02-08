@@ -455,7 +455,7 @@ export const getCSV = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Something went wrong in editing user information",
+      message: "Something went wrong while getting CSV",
       data: {},
       success: false,
       err: error,

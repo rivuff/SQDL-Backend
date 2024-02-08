@@ -71,6 +71,7 @@ import {
   getAllQuestionFromSession,
   addCurrsession,
   deleteAllQuestionFromSession,
+  sessionCSV,
   distributeQuestions,
 } from "../../controller/session-controller.js";
 import {
@@ -150,6 +151,7 @@ router.post("/session/update", editSession);
 router.post("/session/addQuestion", addQuestionToSession);
 router.get("/session/getsessionquestion", getAllQuestionFromSession);
 router.post("/session/distributedQuestions", distributeQuestions);
+router.post("/session/sessionCSV", sessionCSV);
 router.get("/session/questios/delete", deleteAllQuestionFromSession);
 
 
