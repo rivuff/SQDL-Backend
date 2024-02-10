@@ -82,8 +82,8 @@ import {
   getQuestionByIDs,
   getQuestionUserIteration,
   getQuestionById,
-  updateQuestion
-
+  updateQuestion,
+  QuestionCSV
 } from "../../controller/question-controller.js";
 
 const router = express.Router();
@@ -166,6 +166,7 @@ router.get("/question/usrId", getQuestionsByUserId);
 router.post("/question/update", updateQuestion);
 router.post('/question/create', createQuestion)
 router.post('/question/priorityByPeer', addPriorityByPeer)
+router.post('/question/getQuestionCSV', QuestionCSV)
 router.get('/question/userIteration', getQuestionUserIteration);
 // router.get('/question/usrId', getQuestionsByUserId);
 

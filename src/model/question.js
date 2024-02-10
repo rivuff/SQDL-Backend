@@ -41,6 +41,7 @@ const questionSchema = new mongoose.Schema(
         prioritizedBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
+          strictPopulate: false
         },
         priority: {
           type: Number,

@@ -1,7 +1,9 @@
 import QuestionRepository from "../repository/question-repository.js";
+import UserRepository from "../repository/user-repository.js";
 import Question from "../model/question.js";
 
 const questionRepo = new QuestionRepository();
+const userRepo = new UserRepository();
 
 export const createQuestion = async (req, res) => {
   try {
@@ -95,9 +97,9 @@ export const getQuestionByIDs = async (req, res) => {
     const _ids = req.body._ids;
     const questions = [];
     for (let i = 0; i < _ids.length; i++) {
-      const user = await questionRepo.find(_ids[i]);
+      const question = await Question.find({_id: _ids[i]}).populate("priorityByPeer.prioritizedBy");
       // console.log(_ids[i])
-      questions.push(user);
+      questions.push(question);
     }
     return res.status(200).json({
       success: true,
@@ -231,3 +233,124 @@ export const addPriorityByPeer = async (req, res) => {
     res.status(500).json({ error: "Controller error" });
   }
 };
+
+export const QuestionCSV = async (req, res) => {
+  let questions = [];
+  let questioninfo = null;
+  let peersData = [];
+  try {
+    const { _ids } = req.body;
+    for (let i = 0; i < _ids.length; i++) {
+      const question = await questionRepo.find(_ids[i]);
+      questions.push(question);
+    }
+
+    for (let question of questions) {
+      for (let peer of question.priorityByPeer) {
+        const peerData = await userRepo.findByID(peer.prioritizedBy)
+        const x = {quesId: question._id, name: peerData.name, priority: peer.priority}
+        peersData.push(x)
+      }
+    }
+    // console.log("-----------------------------------")
+    // console.log(peersData);
+    // console.log("-----------------------------------")
+
+    questioninfo = questions.map(
+      (ques) => {
+          let names = []
+          let priority = []
+          const questionPeers = peersData.filter(peer => {
+            // console.log(peer.quesId, _id._id)
+            if (peer.quesId === ques._id) {
+              return peer;
+            }
+          })
+          names = questionPeers.map(ques => ques.name)
+          priority = questionPeers.map(ques => ques.priority)
+          // console.log("======================================");
+          // console.log(questionPeers)
+          // console.log(names);
+          // console.log(priority);
+          // console.log("======================================");
+          return [
+            ques._id, ques.questionText, ques.questionTag, ques.raisedByName, ques.priorityBySelf, names, priority
+          ]
+        }
+    )
+    console.log("-----------------------------------")
+    console.log(questioninfo);
+    console.log("-----------------------------------")
+
+    // for (let question of questions) {
+    //   for (let peer of question.priorityByPeer) {
+    //     const peerData = await userRepo.findByID(peer.prioritizedBy)
+        
+    //   }
+    // }
+    // console.log("------------------------------------");
+    // console.log(peersData);
+    // console.log("------------------------------------");
+
+    // questioninfo = questions.map(ques => {
+    //   let peers = [], peerPriorities = []
+
+    //   [ques._id, ques.questionText, ques.questionTag, ques.raisedByName, ques.priorityBySelf]
+    // })
+
+    // sessioninfo = [
+    //   session._id, 
+    //   session.title,
+    //   session.description,
+    //   session.startDateTime,
+    //   session.endDateTime,
+    //   session.conductedBy,
+    //   session.sessionCode,
+    //   questions.length,
+    //   questions,
+    //   students.length,
+    //   students,
+    //   session.activity_order
+    // ]
+
+    // const fields = [
+    //   {id: '_id', title: 'ID'},
+    //   {id: 'description', title: 'Description'},
+    //   {id: 'startDateTime', title: "Start Data and Time"},
+    //   {id: 'endDateTime', title: "End Date and Time"},
+    //   {id: 'conductedBy', title: 'Teacher for Session'},
+    //   {id: 'sessionCode', title: 'Session Code'},
+    //   {id: 'totalQuestions', title: 'Total Questions'},
+    //   {id: 'questions', title: 'Question Posed in Session'},
+    //   {id: 'totalStudents', title: 'Total Students'},
+    //   {id: 'approved_request', title: "Students in Session"},
+    //   {id: 'activity_order', title: 'Activity in Session'},
+    // ]
+
+    // const csvWriter = createObjectCsvWriter({
+    //   path: 'output.csv',
+    //   header: fields,
+    // });
+
+    // await csvWriter.writeRecords(session);
+
+    // console.log("Write to output.csv successfully!")
+
+
+    // res.download("output.csv")
+    return res.status(200).json({
+      message: "Data for CSV retrived successfully",
+      data: questioninfo,
+      success: true,
+      err: false,
+    })
+    
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong while getting Question CSV",
+      data: {},
+      success: false,
+      err: error,
+    });
+  }
+}
