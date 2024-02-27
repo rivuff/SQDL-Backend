@@ -274,7 +274,8 @@ export const QuestionCSV = async (req, res) => {
           // console.log(priority);
           // console.log("======================================");
           return [
-            ques._id, ques.questionText, ques.questionTag, ques.raisedByName, ques.priorityBySelf, names, priority
+            ques._id, ques.questionText, ques.questionTag, ques.raisedByName, ques.priorityBySelf, names, priority, 
+            ques.iteration
           ]
         }
     )
