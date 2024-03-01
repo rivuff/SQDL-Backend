@@ -262,12 +262,12 @@ export const deleteAllQuestionFromSession = async (req, res) => {
 
 export const editSession = async (req, res) => {
   //checking submitted fields
-  console.log("Into the session update function")
+  // console.log("Into the session update function")
   try {
     const _id = req.body._id;
-    console.log("Getting session");
+    // console.log("Getting session");
     const session = await sessionRepo.get(_id);
-    console.log("Got Session")
+    // console.log("Got Session")
     if (session == null) {
       return res.status(404).json({
         message: "Session does not exist",
@@ -331,9 +331,9 @@ export const editSession = async (req, res) => {
     if (req.body.selected_questions != null) {
       session.selected_questions = req.body.selected_questions;
     }
-    console.log("Server before session update")
+    // console.log("Server before session update")
     const updatedSession = await session.save();
-    console.log("W00000", updatedSession);
+    // console.log("W00000", updatedSession);
     return res.status(200).json({
       message: "Session updated",
       data: updatedSession,
@@ -586,9 +586,9 @@ export const distributeQuestions = async(req, res) => {
     const questionsPerStudent = Math.floor((totalQuestions.length * z) / totalStudents)
     const shuffledQuestions = totalQuestions.sort(() => Math.random() - 0.5);
 
-    console.log(`Total Question: ${totalQuestions.length}`);
-    console.log(`Total Students: ${totalStudents}`);
-    console.log(`Question Per Student: ${questionsPerStudent}`);
+    // console.log(`Total Question: ${totalQuestions.length}`);
+    // console.log(`Total Students: ${totalStudents}`);
+    // console.log(`Question Per Student: ${questionsPerStudent}`);
 
     for (const student of sessionStudents) {
       console.log(`=======================${student.name}=======================`)
@@ -600,6 +600,7 @@ export const distributeQuestions = async(req, res) => {
           return ques;
         }
       })
+      console.log(`${student.name} can answer: ${questionToAnswer.length} questions`)
       if (questionToAnswer.length > questionsPerStudent) {
         for (let i = 0; i < questionToAnswer.length; i++) {
           if (studentQuestions.length === questionsPerStudent) {
@@ -621,7 +622,7 @@ export const distributeQuestions = async(req, res) => {
             }
           }
         }
-      } else if (questionToAnswer.length < questionsPerStudent) {
+      } else if (questionToAnswer.length <= questionsPerStudent) {
         questionToAnswer.map((ques) => {
           ques.counter += 1;
           studentQuestions.push(ques)
@@ -634,6 +635,31 @@ export const distributeQuestions = async(req, res) => {
       await student.save();
       console.log(`=======================${student.name}=======================`)
     }
+
+    const temp = [];
+    const questionNotAssigned = [];
+    console.log(`Total Questions are: ${totalQuestions}`)
+    for (const student of sessionStudents) {
+      console.log(`${student.name} has ${student.questions} questions`);
+      temp.push(...student.questions);
+    }
+    console.log(`Temp Questions are: ${temp}`);
+    for (const question of totalQuestions) {
+      if (temp.indexOf(question._id) == -1) {
+        questionNotAssigned.push(question);
+      }
+    }
+    // if (questionNotAssigned.length > 0) {
+      console.log("Question that are not Assigned are: ", questionNotAssigned);
+      console.log(`Extra Question will be assigned to ${sessionStudents[0].name}`);
+      const x = temp.map(ques => ques._id)
+      const y = [...sessionStudents[0].questions, ...questionNotAssigned]
+      console.log(`Question before adding the remaing: ${sessionStudents[0].questions.length}`)
+      sessionStudents[0].questions = y
+      console.log(`Question afters adding the remaing: ${sessionStudents[0].questions.length}`)
+      
+      // await sessionStudents[0].save();
+    // }
 
     await session.save();
 

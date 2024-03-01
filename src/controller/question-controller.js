@@ -65,7 +65,7 @@ export const getAllQuestion = async (req, res) => {
 export const getQuestionUserIteration = async(req, res)=> {
     try {
         const { userId, sessionIteration } = req.query;
-        console.log(userId, sessionIteration);
+        // console.log(userId, sessionIteration);
     
         // Get the user's questions based on the provided userId and sessionIteration
         // You can use the Mongoose query to find the questions that match the conditions.
@@ -85,7 +85,7 @@ export const getQuestionById = async (req, res) => {
   try{
     const {_id} = req.body;
     const question = await Question.find({_id: _id});
-    console.log(question);
+    // console.log(question);
     res.status(200).json({message: "Question found successfully", data: question});
   } catch(error) {
     res.status(500).json({error: 'Question controller error'})
@@ -187,7 +187,7 @@ export const updateQuestion = async (req, res) => {
       question.pickedBySystem = req.body.pickedBySystem;
     }
     const updatedQuestion = await question.save();
-    console.log("updatedQuestion", updatedQuestion);
+    // console.log("updatedQuestion", updatedQuestion);
     return res.status(200).json({
       message: "Question updated",
       data: updatedQuestion,
@@ -210,7 +210,7 @@ export const addPriorityByPeer = async (req, res) => {
   try {
     const { rating, questionId, studentId } = req.body;
     const question = await Question.findById(questionId);
-    console.log(question);
+    // console.log(question);
     if (!question) {
       return res.status(200).json({ error: "question not found" });
     }
@@ -227,7 +227,7 @@ export const addPriorityByPeer = async (req, res) => {
     question.save();
 
     res.status(200).json({ message: "rating added successfully" });
-    console.log("ratting added");
+    // console.log("ratting added");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Controller error" });
@@ -279,9 +279,9 @@ export const QuestionCSV = async (req, res) => {
           ]
         }
     )
-    console.log("-----------------------------------")
-    console.log(questioninfo);
-    console.log("-----------------------------------")
+    // console.log("-----------------------------------")
+    // console.log(questioninfo);
+    // console.log("-----------------------------------")
 
     // for (let question of questions) {
     //   for (let peer of question.priorityByPeer) {

@@ -42,13 +42,13 @@ export const userSignup = async (req, res) => {
 export const userLogin = async (req, res) => {
   try {
     let user = null;
-    console.log(req.body.email, req.body.password);
+    // console.log(req.body.email, req.body.password);
     if (req.body.email != null) {
       user = await userRepo.findBy(req.body.email);
     } else {
       user = await userRepo.findBystudId(req.body.studentId);
     }
-    console.log(user.comparePassword(req.body.password));
+    // console.log(user.comparePassword(req.body.password));
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -60,7 +60,7 @@ export const userLogin = async (req, res) => {
         message: "incorrect password",
       });
     }
-    console.log(user);
+    // console.log(user);
     const token = user.genJWT();
 
     return res.status(200).json({
@@ -128,7 +128,7 @@ export const updateInfo = async (req, res) => {
       // console.log(user.enrollmentNumber);
     }
     const updateUser = await user.save();
-    console.log("updated");
+    // console.log("updated");
     return res.status(200).json({
       success: true,
       message: "Successfully updated",
@@ -147,7 +147,7 @@ export const updateInfo = async (req, res) => {
 };
 
 export const handleRequest = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   const request = req.body.request
   try {
     const user = await userRepo.findByID(request._id);
@@ -177,7 +177,7 @@ export const handleRequest = async (req, res) => {
       return res.status(200).json({message: "request accepted", data: user})
     }
     
-    console.log("request sent");
+    // console.log("request sent");
     return res.status(400).json({message: "type parameter missing", success: false});
   } catch(error) {
     console.log(error);
@@ -186,14 +186,14 @@ export const handleRequest = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-  console.log(req.body.email);
+  // console.log(req.body.email);
   try {
     const email = req.body.email;
-    console.log(email);
+    // console.log(email);
     const response = await userRepo.delete(email);
 
     if (response) {
-      console.log("User successfully deleted");
+      // console.log("User successfully deleted");
       return res.json({
         message: "User successfully deleted",
         success: true,
@@ -221,7 +221,7 @@ export const associateTeacher = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: _id});
-    console.log(user);
+    // console.log(user);
 
     if (!user) {
       return res.status(200).json({error: "user not found"});
@@ -266,10 +266,10 @@ export const getByID = async (req, res) => {
     const { _id } = req.body;
     
     const user = await userRepo.findByID(_id);
-    console.log("--------------------------------------");
-    console.log("Type of id: " + typeof(_id));
-    console.log(user);
-    console.log("--------------------------------------");
+    // console.log("--------------------------------------");
+    // console.log("Type of id: " + typeof(_id));
+    // console.log(user);
+    // console.log("--------------------------------------");
     return res.status(200).json({
       success: true,
       message: "User retrived successfully",
@@ -315,9 +315,9 @@ export const getByIDs = async (req, res) => {
 
 export const getAlluser = async (req, res) => {
   try {
-    console.log(req.query);
+    // console.log(req.query);
     const { offset, limit } = req.query;
-    console.log(offset, limit);
+    // console.log(offset, limit);
     const users = await userRepo.getAll(parseInt(offset), parseInt(limit));
     return res.status(200).json({
       success: true,
@@ -361,10 +361,10 @@ export const addTeacherToStudent = async (req, res) => {
   const { studentId, teacherIds } = req.body;
 
   try {
-    console.log(studentId);
+    // console.log(studentId);
     const user = await User.findOne({ _id: studentId });
 
-    console.log(user);
+    // console.log(user);
     if (!user) {
       return res.status(200).json({ error: "user not found" });
     }
@@ -376,7 +376,7 @@ export const addTeacherToStudent = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "Teachers added successfully" });
-    console.log("Teachers added");
+    // console.log("Teachers added");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Controller error" });
@@ -401,7 +401,7 @@ export const addQuestionToUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "Question added successfully", data: user });
-    console.log("Question added to user");
+    // console.log("Question added to user");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Controller error" });
@@ -410,14 +410,14 @@ export const addQuestionToUser = async (req, res) => {
 
 export const getCSV = async (req, res) => {
   try {
-    console.log(req.query);
+    // console.log(req.query);
     const { offset, limit } = req.query;
-    console.log(offset, limit);
+    // console.log(offset, limit);
 
     let users = await userRepo.getAll(parseInt(offset), parseInt(limit));
     users = [...(users.filter(user => user.type === "student"))]
-    console.log(users)
-    console.log(typeof(users));
+    // console.log(users)
+    // console.log(typeof(users));
 
     const fields = [
       { id: '_id', title: 'ID' },
@@ -447,7 +447,7 @@ export const getCSV = async (req, res) => {
 
     await csvWriter.writeRecords(users);
 
-    console.log("Write to output.csv successfully!")
+    // console.log("Write to output.csv successfully!")
 
 
     res.download("output.csv")
